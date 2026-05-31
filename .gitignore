@@ -1,1 +1,7 @@
-#SOS-MBEUND echo node_modules/ .env .DS_Store
+#SOS-MBEUND 
+
+ node_modules/ 
+ .env 
+ .DS_Store
+ dist/
+ build/ 
