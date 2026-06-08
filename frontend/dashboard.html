@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SOS-Mbeund — Dashboard</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">
+    <img src="image.png" height="45" alt="SOS Mbeund" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+    <span style="display:none;align-items:center;gap:8px;"><span>🌊</span> SOS-Mbeund</span>
+  </div>
+  <div class="nav-links">
+    <a href="dashboard.html" class="active">🏠 Tableau de bord</a>
+    <a href="signaler.html">🚨 Signaler</a>
+  </div>
+
+  <!-- MENU UTILISATEUR AVEC DÉCONNEXION -->
+  <div class="nav-user" style="position:relative;">
+    <div onclick="toggleMenu()" style="display:flex;align-items:center;gap:10px;cursor:pointer;padding:6px 12px;border-radius:10px;transition:background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.15)'" onmouseout="this.style.background='transparent'">
+      <div class="avatar">AD</div>
+      <span>Absatou Diallo</span>
+      <span style="font-size:0.75rem;">▼</span>
+    </div>
+
+    <div id="user-menu" style="display:none;position:absolute;top:54px;right:0;background:white;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,0.15);min-width:200px;overflow:hidden;z-index:999;">
+      <div style="padding:14px 16px;border-bottom:1px solid #E2E8F0;background:#F8FAFF;">
+        <div style="font-weight:600;color:#0D1B2A;font-size:0.9rem;">Absatou Diallo</div>
+        <div style="font-size:0.78rem;color:#4A5568;margin-top:2px;">absatou@sos-mbeund.sn</div>
+        <div style="font-size:0.72rem;color:#16A34A;margin-top:4px;font-weight:500;">● Citoyen</div>
+      </div>
+      <div style="padding:6px 0;">
+        <a href="#" style="display:flex;align-items:center;gap:10px;padding:10px 16px;color:#0D1B2A;text-decoration:none;font-size:0.88rem;" onmouseover="this.style.background='#F0F4FA'" onmouseout="this.style.background='transparent'">👤 Mon profil</a>
+        <a href="#" style="display:flex;align-items:center;gap:10px;padding:10px 16px;color:#0D1B2A;text-decoration:none;font-size:0.88rem;" onmouseover="this.style.background='#F0F4FA'" onmouseout="this.style.background='transparent'">🔔 Mes signalements</a>
+        <a href="#" style="display:flex;align-items:center;gap:10px;padding:10px 16px;color:#0D1B2A;text-decoration:none;font-size:0.88rem;" onmouseover="this.style.background='#F0F4FA'" onmouseout="this.style.background='transparent'">⚙️ Paramètres</a>
+      </div>
+      <div style="border-top:1px solid #E2E8F0;padding:6px 0;">
+        <a href="login.html" onclick="deconnecter()" style="display:flex;align-items:center;gap:10px;padding:10px 16px;color:#C0392B;text-decoration:none;font-size:0.88rem;font-weight:600;" onmouseover="this.style.background='#FEE2E2'" onmouseout="this.style.background='transparent'">🚪 Se déconnecter</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="page">
+
+  <h1 class="page-titre">Tableau de bord</h1>
+  <p class="page-sous-titre">Situation des inondations en temps réel — Sénégal 🇸🇳</p>
+
+  <div class="stats-grille">
+    <div class="stat-carte rouge">
+      <div class="stat-icone">🚨</div>
+      <div>
+        <div class="stat-nombre">24</div>
+        <div class="stat-label">Alertes actives</div>
+      </div>
+    </div>
+    <div class="stat-carte orange">
+      <div class="stat-icone">⚡</div>
+      <div>
+        <div class="stat-nombre">8</div>
+        <div class="stat-label">Zones électriques dangereuses</div>
+      </div>
+    </div>
+    <div class="stat-carte">
+      <div class="stat-icone">🏘️</div>
+      <div>
+        <div class="stat-nombre">12</div>
+        <div class="stat-label">Quartiers touchés</div>
+      </div>
+    </div>
+    <div class="stat-carte vert">
+      <div class="stat-icone">✅</div>
+      <div>
+        <div class="stat-nombre">37</div>
+        <div class="stat-label">Alertes résolues</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grille-principale">
+    <div class="carte-bloc">
+      <div class="bloc-header">
+        <span class="bloc-titre">🗺️ Carte des zones inondées</span>
+        <a href="signaler.html" class="btn-signaler">+ Signaler</a>
+      </div>
+      <div class="map-conteneur">
+        <div class="map-bg"></div>
+        <div class="map-senegal">🇸🇳</div>
+        <div class="zone-point rouge" style="top:35%;left:28%"><div class="point"></div><span class="zone-label">Pikine</span></div>
+        <div class="zone-point rouge" style="top:42%;left:32%"><div class="point"></div><span class="zone-label">Guédiawaye</span></div>
+        <div class="zone-point orange" style="top:30%;left:38%"><div class="point"></div><span class="zone-label">Parcelles</span></div>
+        <div class="zone-point orange" style="top:55%;left:25%"><div class="point"></div><span class="zone-label">Dakar</span></div>
+        <div class="zone-point jaune" style="top:20%;left:55%"><div class="point"></div><span class="zone-label">Thiès</span></div>
+        <div class="zone-point jaune" style="top:60%;left:60%"><div class="point"></div><span class="zone-label">Kaolack</span></div>
+      </div>
+      <div class="map-legende">
+        <div class="legende-item"><div class="legende-point" style="background:#C0392B"></div>Critique</div>
+        <div class="legende-item"><div class="legende-point" style="background:#E8611A"></div>Élevé</div>
+        <div class="legende-item"><div class="legende-point" style="background:#D97706"></div>Modéré</div>
+      </div>
+    </div>
+
+    <div class="carte-bloc">
+      <div class="bloc-header">
+        <span class="bloc-titre">🔔 Dernières alertes</span>
+      </div>
+      <div class="alertes-liste">
+        <div class="alerte-item">
+          <span class="alerte-badge badge-rouge">CRITIQUE</span>
+          <div class="alerte-info">
+            <div class="alerte-titre">Zone électrique inondée</div>
+            <div class="alerte-lieu">📍 Pikine — Rue 10</div>
+            <div class="alerte-heure">🕐 Il y a 5 min · statut: reçue</div>
+          </div>
+        </div>
+        <div class="alerte-item">
+          <span class="alerte-badge badge-rouge">CRITIQUE</span>
+          <div class="alerte-info">
+            <div class="alerte-titre">Route impraticable</div>
+            <div class="alerte-lieu">📍 Guédiawaye — Av. principale</div>
+            <div class="alerte-heure">🕐 Il y a 18 min · statut: en cours</div>
+          </div>
+        </div>
+        <div class="alerte-item">
+          <span class="alerte-badge badge-orange">ÉLEVÉ</span>
+          <div class="alerte-info">
+            <div class="alerte-titre">Inondation maisons</div>
+            <div class="alerte-lieu">📍 Parcelles Assainies</div>
+            <div class="alerte-heure">🕐 Il y a 34 min · statut: reçue</div>
+          </div>
+        </div>
+        <div class="alerte-item">
+          <span class="alerte-badge badge-orange">ÉLEVÉ</span>
+          <div class="alerte-info">
+            <div class="alerte-titre">Coupure de courant</div>
+            <div class="alerte-lieu">📍 Dakar — Médina</div>
+            <div class="alerte-heure">🕐 Il y a 1h · statut: en cours</div>
+          </div>
+        </div>
+        <div class="alerte-item">
+          <span class="alerte-badge badge-bleu">MODÉRÉ</span>
+          <div class="alerte-info">
+            <div class="alerte-titre">Rue inondée</div>
+            <div class="alerte-lieu">📍 Thiès — Quartier Nord</div>
+            <div class="alerte-heure">🕐 Il y a 2h · statut: reçue</div>
+          </div>
+        </div>
+        <div class="alerte-item">
+          <span class="alerte-badge badge-vert">RÉSOLUE</span>
+          <div class="alerte-info">
+            <div class="alerte-titre">Évacuation terminée</div>
+            <div class="alerte-lieu">📍 Kaolack — Centre</div>
+            <div class="alerte-heure">🕐 Il y a 3h · statut: résolue</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function toggleMenu() {
+  const menu = document.getElementById('user-menu');
+  menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+}
+document.addEventListener('click', function(e) {
+  const menu = document.getElementById('user-menu');
+  if (menu && !e.target.closest('.nav-user')) {
+    menu.style.display = 'none';
+  }
+});
+function deconnecter() {
+  localStorage.removeItem('token');
+  localStorage.removeItem('utilisateur');
+  window.location.href = 'login.html';
+}
+</script>
+
+</body>
+</html>
