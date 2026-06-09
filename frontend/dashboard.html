@@ -4,162 +4,265 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>SOS-Mbeund — Dashboard</title>
-  <link rel="stylesheet" href="style.css"/>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'Outfit',sans-serif;background:#F0F4FA;min-height:100vh;display:flex;flex-direction:column;}
+    /* NAVBAR */
+    .top-nav{background:#0A3080;padding:0 3rem;height:70px;display:flex;align-items:center;justify-content:space-between;position:relative;}
+    .top-nav-logo img{height:52px;object-fit:contain;}
+    .top-nav-logo-fallback{color:white;font-size:1.3rem;font-weight:700;}
+    .top-nav-links{display:flex;align-items:center;gap:2.5rem;}
+    .top-nav-links a{color:rgba(255,255,255,0.85);text-decoration:none;font-size:0.95rem;font-weight:500;}
+    .top-nav-links a:hover{color:white;}
+    .top-nav-search{padding:8px 20px;border:1.5px solid rgba(255,255,255,0.5);border-radius:25px;background:transparent;color:rgba(255,255,255,0.7);font-size:0.9rem;font-family:'Outfit',sans-serif;cursor:pointer;}
+    /* LAYOUT */
+    .layout{display:flex;flex:1;}
+    /* SIDEBAR */
+    .sidebar{width:200px;background:white;border-right:1px solid #E5E7EB;padding:1.5rem 0;flex-shrink:0;}
+    .sidebar-item{display:flex;align-items:center;gap:10px;padding:12px 1.5rem;color:#374151;text-decoration:none;font-size:0.9rem;font-weight:500;transition:all 0.2s;border-left:3px solid transparent;}
+    .sidebar-item:hover{background:#F0F4FA;color:#0A3080;}
+    .sidebar-item.active{background:#EBF3FF;color:#0A3080;border-left-color:#0A3080;font-weight:600;}
+    /* MAIN */
+    .main{flex:1;padding:2rem;}
+    .main-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;}
+    .main-titre{font-size:1.1rem;font-weight:600;color:#0D1B2A;}
+    .btn-nouvelle{display:flex;align-items:center;gap:6px;padding:9px 18px;background:#0A3080;color:white;border:none;border-radius:8px;font-size:0.85rem;font-weight:600;font-family:'Outfit',sans-serif;cursor:pointer;text-decoration:none;}
+    .btn-nouvelle:hover{background:#0D3D82;}
+    /* STATS */
+    .stats-grille{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem;}
+    .stat-bloc{background:white;border-radius:12px;padding:1.2rem 1.5rem;box-shadow:0 1px 4px rgba(0,0,0,0.06);}
+    .stat-label{font-size:0.78rem;color:#6B7280;margin-bottom:4px;}
+    .stat-nombre{font-size:1.8rem;font-weight:700;}
+    .stat-nombre.rouge{color:#C0392B;}
+    .stat-nombre.bleu{color:#0A3080;}
+    .stat-nombre.vert{color:#16A34A;}
+    .stat-nombre.gris{color:#374151;}
+    /* FILTRES */
+    .filtres{display:flex;gap:10px;margin-bottom:1.2rem;flex-wrap:wrap;}
+    .filtre-input{padding:9px 14px;border:1.5px solid #E5E7EB;border-radius:8px;font-size:0.85rem;font-family:'Outfit',sans-serif;color:#374151;background:white;min-width:180px;}
+    .filtre-input:focus{outline:none;border-color:#0A3080;}
+    /* TABLE */
+    .table-bloc{background:white;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,0.06);overflow:hidden;}
+    table{width:100%;border-collapse:collapse;}
+    thead tr{border-bottom:1px solid #E5E7EB;}
+    th{padding:12px 16px;text-align:left;font-size:0.78rem;font-weight:600;color:#6B7280;text-transform:uppercase;letter-spacing:0.5px;}
+    td{padding:14px 16px;font-size:0.88rem;color:#374151;border-bottom:1px solid #F3F4F6;}
+    tr:last-child td{border-bottom:none;}
+    tr:hover td{background:#F9FAFB;}
+    .zone-cell{display:flex;align-items:center;gap:6px;font-weight:500;color:#0D1B2A;}
+    .zone-icon{color:#6B7280;font-size:0.9rem;}
+    /* BADGES */
+    .badge-priorite,.badge-statut{padding:4px 10px;border-radius:20px;font-size:0.75rem;font-weight:600;display:inline-flex;align-items:center;gap:4px;}
+    .p-haute{background:#FEE2E2;color:#991B1B;}
+    .p-moyenne{background:#FEF3C7;color:#92400E;}
+    .p-faible{background:#DCFCE7;color:#14532D;}
+    .s-urgente{background:#FEE2E2;color:#991B1B;}
+    .s-encours{background:#DBEAFE;color:#1E3A8A;}
+    .s-resolu{background:#DCFCE7;color:#14532D;}
+    .btn-voir{color:#0A3080;font-size:0.85rem;font-weight:600;text-decoration:none;background:none;border:none;cursor:pointer;font-family:'Outfit',sans-serif;}
+    .btn-voir:hover{text-decoration:underline;}
+    /* ADMIN */
+    .admin-badge{display:flex;align-items:center;gap:8px;padding:6px 14px;background:rgba(255,255,255,0.1);border-radius:25px;cursor:pointer;position:relative;}
+    .admin-avatar{width:30px;height:30px;border-radius:50%;background:#E8611A;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.78rem;color:white;}
+    .admin-nom{color:white;font-size:0.85rem;}
+    /* FOOTER */
+    footer{background:#0A3080;color:rgba(255,255,255,0.7);padding:1.5rem 3rem;}
+    .footer-content{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:0.8rem;}
+    .footer-links{display:flex;gap:1.5rem;flex-wrap:wrap;}
+    .footer-links a{color:rgba(255,255,255,0.7);text-decoration:none;font-size:0.82rem;}
+    .footer-links a:hover{color:white;}
+    .footer-social{display:flex;gap:8px;}
+    .social-btn{width:32px;height:32px;border-radius:7px;border:1px solid rgba(255,255,255,0.3);display:flex;align-items:center;justify-content:center;font-size:0.82rem;cursor:pointer;color:white;text-decoration:none;}
+    .footer-copy{font-size:0.78rem;color:rgba(255,255,255,0.5);border-top:1px solid rgba(255,255,255,0.1);padding-top:0.8rem;}
+    /* MENU DÉCONNEXION */
+    .user-menu{display:none;position:absolute;top:64px;right:1rem;background:white;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,0.15);min-width:200px;overflow:hidden;z-index:999;}
+    .user-menu-info{padding:14px 16px;border-bottom:1px solid #E5E7EB;background:#F8FAFF;}
+    .user-menu-nom{font-weight:600;color:#0D1B2A;font-size:0.9rem;}
+    .user-menu-email{font-size:0.78rem;color:#4A5568;margin-top:2px;}
+    .user-menu-role{font-size:0.72rem;color:#16A34A;margin-top:4px;font-weight:500;}
+    .user-menu-item{display:flex;align-items:center;gap:10px;padding:10px 16px;color:#0D1B2A;text-decoration:none;font-size:0.88rem;}
+    .user-menu-item:hover{background:#F0F4FA;}
+    .user-menu-deco{display:flex;align-items:center;gap:10px;padding:10px 16px;color:#C0392B;text-decoration:none;font-size:0.88rem;font-weight:600;border-top:1px solid #E5E7EB;}
+    .user-menu-deco:hover{background:#FEE2E2;}
+  </style>
 </head>
 <body>
 
-<nav>
-  <div class="nav-logo">
-    <img src="image.png" height="45" alt="SOS Mbeund" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
-    <span style="display:none;align-items:center;gap:8px;"><span>🌊</span> SOS-Mbeund</span>
+<nav class="top-nav">
+  <div class="top-nav-logo">
+    <img src="image.png" alt="SOS Mbeund" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/>
+    <div class="top-nav-logo-fallback" style="display:none;">🌊 SOS MBEUND</div>
   </div>
-  <div class="nav-links">
-    <a href="dashboard.html" class="active">🏠 Tableau de bord</a>
-    <a href="signaler.html">🚨 Signaler</a>
+  <div class="top-nav-links">
+    <a href="index.html">Accueil</a>
+    <a href="signaler.html">Signaler</a>
+    <a href="#">Aide</a>
+    <button class="top-nav-search">Recherche</button>
   </div>
-
-  <!-- MENU UTILISATEUR AVEC DÉCONNEXION -->
-  <div class="nav-user" style="position:relative;">
-    <div onclick="toggleMenu()" style="display:flex;align-items:center;gap:10px;cursor:pointer;padding:6px 12px;border-radius:10px;transition:background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.15)'" onmouseout="this.style.background='transparent'">
-      <div class="avatar">AD</div>
-      <span>Absatou Diallo</span>
-      <span style="font-size:0.75rem;">▼</span>
+  <div class="admin-badge" onclick="toggleMenu()">
+    <div class="admin-avatar">A</div>
+    <span class="admin-nom">Admin connecté</span>
+  </div>
+  <div class="user-menu" id="user-menu">
+    <div class="user-menu-info">
+      <div class="user-menu-nom">Absatou Diallo</div>
+      <div class="user-menu-email">absatou@sos-mbeund.sn</div>
+      <div class="user-menu-role">● Admin</div>
     </div>
-
-    <div id="user-menu" style="display:none;position:absolute;top:54px;right:0;background:white;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,0.15);min-width:200px;overflow:hidden;z-index:999;">
-      <div style="padding:14px 16px;border-bottom:1px solid #E2E8F0;background:#F8FAFF;">
-        <div style="font-weight:600;color:#0D1B2A;font-size:0.9rem;">Absatou Diallo</div>
-        <div style="font-size:0.78rem;color:#4A5568;margin-top:2px;">absatou@sos-mbeund.sn</div>
-        <div style="font-size:0.72rem;color:#16A34A;margin-top:4px;font-weight:500;">● Citoyen</div>
-      </div>
-      <div style="padding:6px 0;">
-        <a href="#" style="display:flex;align-items:center;gap:10px;padding:10px 16px;color:#0D1B2A;text-decoration:none;font-size:0.88rem;" onmouseover="this.style.background='#F0F4FA'" onmouseout="this.style.background='transparent'">👤 Mon profil</a>
-        <a href="#" style="display:flex;align-items:center;gap:10px;padding:10px 16px;color:#0D1B2A;text-decoration:none;font-size:0.88rem;" onmouseover="this.style.background='#F0F4FA'" onmouseout="this.style.background='transparent'">🔔 Mes signalements</a>
-        <a href="#" style="display:flex;align-items:center;gap:10px;padding:10px 16px;color:#0D1B2A;text-decoration:none;font-size:0.88rem;" onmouseover="this.style.background='#F0F4FA'" onmouseout="this.style.background='transparent'">⚙️ Paramètres</a>
-      </div>
-      <div style="border-top:1px solid #E2E8F0;padding:6px 0;">
-        <a href="login.html" onclick="deconnecter()" style="display:flex;align-items:center;gap:10px;padding:10px 16px;color:#C0392B;text-decoration:none;font-size:0.88rem;font-weight:600;" onmouseover="this.style.background='#FEE2E2'" onmouseout="this.style.background='transparent'">🚪 Se déconnecter</a>
-      </div>
-    </div>
+    <a href="#" class="user-menu-item">👤 Mon profil</a>
+    <a href="#" class="user-menu-item">⚙️ Paramètres</a>
+    <a href="login.html" class="user-menu-deco" onclick="deconnecter()">🚪 Se déconnecter</a>
   </div>
 </nav>
 
-<div class="page">
+<div class="layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <a href="alertes.html" class="sidebar-item active">🔔 Alertes</a>
+  </aside>
 
-  <h1 class="page-titre">Tableau de bord</h1>
-  <p class="page-sous-titre">Situation des inondations en temps réel — Sénégal 🇸🇳</p>
+  <!-- CONTENU -->
+  <main class="main">
+    <div class="main-header">
+      <h1 class="main-titre">Liste des alertes</h1>
+      <a href="signaler.html" class="btn-nouvelle">⊕ Nouvelle alerte</a>
+    </div>
 
-  <div class="stats-grille">
-    <div class="stat-carte rouge">
-      <div class="stat-icone">🚨</div>
-      <div>
-        <div class="stat-nombre">24</div>
-        <div class="stat-label">Alertes actives</div>
+    <!-- STATS -->
+    <div class="stats-grille">
+      <div class="stat-bloc">
+        <div class="stat-label">Total</div>
+        <div class="stat-nombre gris">0</div>
       </div>
-    </div>
-    <div class="stat-carte orange">
-      <div class="stat-icone">⚡</div>
-      <div>
-        <div class="stat-nombre">8</div>
-        <div class="stat-label">Zones électriques dangereuses</div>
+      <div class="stat-bloc">
+        <div class="stat-label">Urgentes</div>
+        <div class="stat-nombre rouge">0</div>
       </div>
-    </div>
-    <div class="stat-carte">
-      <div class="stat-icone">🏘️</div>
-      <div>
-        <div class="stat-nombre">12</div>
-        <div class="stat-label">Quartiers touchés</div>
+      <div class="stat-bloc">
+        <div class="stat-label">En cours</div>
+        <div class="stat-nombre bleu">0</div>
       </div>
-    </div>
-    <div class="stat-carte vert">
-      <div class="stat-icone">✅</div>
-      <div>
-        <div class="stat-nombre">37</div>
-        <div class="stat-label">Alertes résolues</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="grille-principale">
-    <div class="carte-bloc">
-      <div class="bloc-header">
-        <span class="bloc-titre">🗺️ Carte des zones inondées</span>
-        <a href="signaler.html" class="btn-signaler">+ Signaler</a>
-      </div>
-      <div class="map-conteneur">
-        <div class="map-bg"></div>
-        <div class="map-senegal">🇸🇳</div>
-        <div class="zone-point rouge" style="top:35%;left:28%"><div class="point"></div><span class="zone-label">Pikine</span></div>
-        <div class="zone-point rouge" style="top:42%;left:32%"><div class="point"></div><span class="zone-label">Guédiawaye</span></div>
-        <div class="zone-point orange" style="top:30%;left:38%"><div class="point"></div><span class="zone-label">Parcelles</span></div>
-        <div class="zone-point orange" style="top:55%;left:25%"><div class="point"></div><span class="zone-label">Dakar</span></div>
-        <div class="zone-point jaune" style="top:20%;left:55%"><div class="point"></div><span class="zone-label">Thiès</span></div>
-        <div class="zone-point jaune" style="top:60%;left:60%"><div class="point"></div><span class="zone-label">Kaolack</span></div>
-      </div>
-      <div class="map-legende">
-        <div class="legende-item"><div class="legende-point" style="background:#C0392B"></div>Critique</div>
-        <div class="legende-item"><div class="legende-point" style="background:#E8611A"></div>Élevé</div>
-        <div class="legende-item"><div class="legende-point" style="background:#D97706"></div>Modéré</div>
+      <div class="stat-bloc">
+        <div class="stat-label">Résolues</div>
+        <div class="stat-nombre vert">0</div>
       </div>
     </div>
 
-    <div class="carte-bloc">
-      <div class="bloc-header">
-        <span class="bloc-titre">🔔 Dernières alertes</span>
-      </div>
-      <div class="alertes-liste">
-        <div class="alerte-item">
-          <span class="alerte-badge badge-rouge">CRITIQUE</span>
-          <div class="alerte-info">
-            <div class="alerte-titre">Zone électrique inondée</div>
-            <div class="alerte-lieu">📍 Pikine — Rue 10</div>
-            <div class="alerte-heure">🕐 Il y a 5 min · statut: reçue</div>
-          </div>
-        </div>
-        <div class="alerte-item">
-          <span class="alerte-badge badge-rouge">CRITIQUE</span>
-          <div class="alerte-info">
-            <div class="alerte-titre">Route impraticable</div>
-            <div class="alerte-lieu">📍 Guédiawaye — Av. principale</div>
-            <div class="alerte-heure">🕐 Il y a 18 min · statut: en cours</div>
-          </div>
-        </div>
-        <div class="alerte-item">
-          <span class="alerte-badge badge-orange">ÉLEVÉ</span>
-          <div class="alerte-info">
-            <div class="alerte-titre">Inondation maisons</div>
-            <div class="alerte-lieu">📍 Parcelles Assainies</div>
-            <div class="alerte-heure">🕐 Il y a 34 min · statut: reçue</div>
-          </div>
-        </div>
-        <div class="alerte-item">
-          <span class="alerte-badge badge-orange">ÉLEVÉ</span>
-          <div class="alerte-info">
-            <div class="alerte-titre">Coupure de courant</div>
-            <div class="alerte-lieu">📍 Dakar — Médina</div>
-            <div class="alerte-heure">🕐 Il y a 1h · statut: en cours</div>
-          </div>
-        </div>
-        <div class="alerte-item">
-          <span class="alerte-badge badge-bleu">MODÉRÉ</span>
-          <div class="alerte-info">
-            <div class="alerte-titre">Rue inondée</div>
-            <div class="alerte-lieu">📍 Thiès — Quartier Nord</div>
-            <div class="alerte-heure">🕐 Il y a 2h · statut: reçue</div>
-          </div>
-        </div>
-        <div class="alerte-item">
-          <span class="alerte-badge badge-vert">RÉSOLUE</span>
-          <div class="alerte-info">
-            <div class="alerte-titre">Évacuation terminée</div>
-            <div class="alerte-lieu">📍 Kaolack — Centre</div>
-            <div class="alerte-heure">🕐 Il y a 3h · statut: résolue</div>
-          </div>
-        </div>
-      </div>
+    <!-- FILTRES -->
+    <div class="filtres">
+      <input type="text" class="filtre-input" placeholder="Rechercher une zone..."/>
+      <select class="filtre-input">
+        <option>Toutes priorités</option>
+        <option>Haute</option>
+        <option>Moyenne</option>
+        <option>Faible</option>
+      </select>
+      <select class="filtre-input">
+        <option>Tous statuts</option>
+        <option>Urgente</option>
+        <option>En cours</option>
+        <option>Résolu</option>
+      </select>
+      <select class="filtre-input">
+        <option>Plus récentes</option>
+        <option>Plus anciennes</option>
+      </select>
     </div>
-  </div>
+
+    <!-- TABLEAU -->
+    <div class="table-bloc">
+      <table>
+        <thead>
+          <tr>
+            <th>Zone</th>
+            <th>Date</th>
+            <th>Priorité</th>
+            <th>Statut</th>
+            <th>Signalé par</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><div class="zone-cell"><span class="zone-icon">📍</span>Pikine</div></td>
+            <td>21 mai — 11h15</td>
+            <td><span class="badge-priorite p-moyenne">● Moyenne</span></td>
+            <td><span class="badge-statut s-urgente">● Urgente</span></td>
+            <td>+221 77 ···</td>
+            <td><a href="alerte-detail.html" class="btn-voir">Voir</a></td>
+          </tr>
+          <tr>
+            <td><div class="zone-cell"><span class="zone-icon">📍</span>Guédiawaye</div></td>
+            <td>21 mai — 14h30</td>
+            <td><span class="badge-priorite p-haute">● Haute</span></td>
+            <td><span class="badge-statut s-encours">● En cours</span></td>
+            <td>+221 76 ···</td>
+            <td><a href="alerte-detail.html" class="btn-voir">Voir</a></td>
+          </tr>
+          <tr>
+            <td><div class="zone-cell"><span class="zone-icon">📍</span>Thiaroye</div></td>
+            <td>20 mai — 09h00</td>
+            <td><span class="badge-priorite p-moyenne">● Moyenne</span></td>
+            <td><span class="badge-statut s-resolu">● Résolu</span></td>
+            <td>+221 78 ···</td>
+            <td><a href="alerte-detail.html" class="btn-voir">Voir</a></td>
+          </tr>
+          <tr>
+            <td><div class="zone-cell"><span class="zone-icon">📍</span>Mbao</div></td>
+            <td>20 mai — 18h00</td>
+            <td><span class="badge-priorite p-faible">● Faible</span></td>
+            <td><span class="badge-statut s-encours">● En cours</span></td>
+            <td>+221 77 ···</td>
+            <td><a href="alerte-detail.html" class="btn-voir">Voir</a></td>
+          </tr>
+          <tr>
+            <td><div class="zone-cell"><span class="zone-icon">📍</span>Yeumbeul</div></td>
+            <td>19 mai — 16h45</td>
+            <td><span class="badge-priorite p-haute">● Haute</span></td>
+            <td><span class="badge-statut s-resolu">● Résolu</span></td>
+            <td>+221 70 ···</td>
+            <td><a href="alerte-detail.html" class="btn-voir">Voir</a></td>
+          </tr>
+          <tr>
+            <td><div class="zone-cell"><span class="zone-icon">📍</span>Rufisque</div></td>
+            <td>19 mai — 08h20</td>
+            <td><span class="badge-priorite p-moyenne">● Moyenne</span></td>
+            <td><span class="badge-statut s-urgente">● Urgente</span></td>
+            <td>+221 76 ···</td>
+            <td><a href="alerte-detail.html" class="btn-voir">Voir</a></td>
+          </tr>
+          <tr>
+            <td><div class="zone-cell"><span class="zone-icon">📍</span>Grand Yoff</div></td>
+            <td>19 mai — 09h00</td>
+            <td><span class="badge-priorite p-faible">● Faible</span></td>
+            <td><span class="badge-statut s-resolu">● Résolu</span></td>
+            <td>+221 77 ···</td>
+            <td><a href="alerte-detail.html" class="btn-voir">Voir</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
 </div>
+
+<footer>
+  <div class="footer-content">
+    <div class="footer-links">
+      <a href="#">Signaler un risque</a>
+      <a href="#">Carte des zones</a>
+      <a href="#">Partenaires</a>
+      <a href="#">Contact</a>
+      <a href="login.html">Connexion admin</a>
+    </div>
+    <div class="footer-social">
+      <a class="social-btn" href="#">f</a>
+      <a class="social-btn" href="#">📷</a>
+      <a class="social-btn" href="#">▶</a>
+    </div>
+  </div>
+  <div class="footer-copy">© SOS Mbeund — Tous droits réservés</div>
+</footer>
 
 <script>
 function toggleMenu() {
@@ -168,16 +271,14 @@ function toggleMenu() {
 }
 document.addEventListener('click', function(e) {
   const menu = document.getElementById('user-menu');
-  if (menu && !e.target.closest('.nav-user')) {
+  if (menu && !e.target.closest('.admin-badge') && !e.target.closest('.user-menu')) {
     menu.style.display = 'none';
   }
 });
 function deconnecter() {
   localStorage.removeItem('token');
   localStorage.removeItem('utilisateur');
-  window.location.href = 'login.html';
 }
 </script>
-
 </body>
 </html>
