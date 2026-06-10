@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SOS-Mbeund — Signaler une inondation</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">
+    <img src="image.png" height="45" alt="SOS Mbeund" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+    <span style="display:none;align-items:center;gap:8px;"><span>🌊</span> SOS-Mbeund</span>
+  </div>
+  <div class="nav-links">
+    <a href="dashboard.html">🏠 Tableau de bord</a>
+    <a href="signaler.html" class="active">🚨 Signaler</a>
+  </div>
+
+  <!-- MENU UTILISATEUR AVEC DÉCONNEXION -->
+  <div class="nav-user" style="position:relative;">
+    <div onclick="toggleMenu()" style="display:flex;align-items:center;gap:10px;cursor:pointer;padding:6px 12px;border-radius:10px;transition:background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.15)'" onmouseout="this.style.background='transparent'">
+      <div class="avatar">AD</div>
+      <span>Absatou Diallo</span>
+      <span style="font-size:0.75rem;">▼</span>
+    </div>
+
+    <div id="user-menu" style="display:none;position:absolute;top:54px;right:0;background:white;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,0.15);min-width:200px;overflow:hidden;z-index:999;">
+      <div style="padding:14px 16px;border-bottom:1px solid #E2E8F0;background:#F8FAFF;">
+        <div style="font-weight:600;color:#0D1B2A;font-size:0.9rem;">Absatou Diallo</div>
+        <div style="font-size:0.78rem;color:#4A5568;margin-top:2px;">absatou@sos-mbeund.sn</div>
+        <div style="font-size:0.72rem;color:#16A34A;margin-top:4px;font-weight:500;">● Citoyen</div>
+      </div>
+      <div style="padding:6px 0;">
+        <a href="#" style="display:flex;align-items:center;gap:10px;padding:10px 16px;color:#0D1B2A;text-decoration:none;font-size:0.88rem;" onmouseover="this.style.background='#F0F4FA'" onmouseout="this.style.background='transparent'">👤 Mon profil</a>
+        <a href="#" style="display:flex;align-items:center;gap:10px;padding:10px 16px;color:#0D1B2A;text-decoration:none;font-size:0.88rem;" onmouseover="this.style.background='#F0F4FA'" onmouseout="this.style.background='transparent'">🔔 Mes signalements</a>
+        <a href="#" style="display:flex;align-items:center;gap:10px;padding:10px 16px;color:#0D1B2A;text-decoration:none;font-size:0.88rem;" onmouseover="this.style.background='#F0F4FA'" onmouseout="this.style.background='transparent'">⚙️ Paramètres</a>
+      </div>
+      <div style="border-top:1px solid #E2E8F0;padding:6px 0;">
+        <a href="login.html" onclick="deconnecter()" style="display:flex;align-items:center;gap:10px;padding:10px 16px;color:#C0392B;text-decoration:none;font-size:0.88rem;font-weight:600;" onmouseover="this.style.background='#FEE2E2'" onmouseout="this.style.background='transparent'">🚪 Se déconnecter</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="page">
+
+  <h1 class="page-titre">Signaler une inondation</h1>
+  <p class="page-sous-titre">Aidez votre communauté en signalant une zone inondée ou dangereuse 🤝</p>
+
+  <div class="form-carte">
+    <div class="alerte-urgence">
+      ⚠️ <span>En cas de <strong>danger immédiat</strong> (électrocution, noyade), appelez d'abord le <strong>18 (pompiers)</strong> ou le <strong>15 (SAMU)</strong>.</span>
+    </div>
+    <br/>
+    <form id="form-signalement" onsubmit="soumettre(event)">
+      <div class="form-grille">
+        <div class="form-groupe">
+          <label class="form-label">Type d'alerte <span>*</span></label>
+          <select class="form-select" name="type_alerte" required>
+            <option value="">-- Choisir --</option>
+            <option value="zone_inondee">🌊 Zone inondée</option>
+            <option value="danger_electrique">⚡ Danger électrique</option>
+            <option value="route_impraticable">🚫 Route impraticable</option>
+            <option value="maison_endommagee">🏚️ Maison endommagée</option>
+            <option value="coupure_courant">💡 Coupure de courant</option>
+            <option value="personne_danger">🆘 Personne en danger</option>
+          </select>
+        </div>
+        <div class="form-groupe">
+          <label class="form-label">Niveau d'urgence <span>*</span></label>
+          <select class="form-select" name="niveau_gravite" required>
+            <option value="">-- Choisir --</option>
+            <option value="critique">🔴 URGENT — Critique</option>
+            <option value="eleve">🟠 ÉLEVÉ — Situation sérieuse</option>
+            <option value="moyen">🟡 MODÉRÉ — À surveiller</option>
+            <option value="faible">🟢 FAIBLE — Information</option>
+          </select>
+        </div>
+        <div class="form-groupe">
+          <label class="form-label">Quartier / Zone <span>*</span></label>
+          <input type="text" class="form-input" name="zone" placeholder="Ex: Pikine, Médina, Parcelles..." required/>
+        </div>
+        <div class="form-groupe">
+          <label class="form-label">Votre téléphone</label>
+          <input type="tel" class="form-input" name="telephone" placeholder="Ex: 77 000 00 00"/>
+        </div>
+        <div class="form-groupe">
+          <label class="form-label">Ville <span>*</span></label>
+          <select class="form-select" name="ville" required>
+            <option value="">-- Choisir --</option>
+            <option value="Dakar">Dakar</option>
+            <option value="Pikine">Pikine</option>
+            <option value="Guediawaye">Guédiawaye</option>
+            <option value="Thies">Thiès</option>
+            <option value="Kaolack">Kaolack</option>
+            <option value="Saint-Louis">Saint-Louis</option>
+            <option value="Ziguinchor">Ziguinchor</option>
+            <option value="Autre">Autre</option>
+          </select>
+        </div>
+        <div class="form-groupe">
+          <label class="form-label">Personnes en danger ? <span>*</span></label>
+          <select class="form-select" name="personnes_danger" required>
+            <option value="">-- Choisir --</option>
+            <option value="oui_bloquees">Oui — personnes bloquées</option>
+            <option value="oui_enfants">Oui — enfants dans l'eau</option>
+            <option value="non_dangereux">Non — situation dangereuse</option>
+            <option value="non_preventif">Non — signalement préventif</option>
+          </select>
+        </div>
+        <div class="form-groupe plein">
+          <label class="form-label">Description de la situation <span>*</span></label>
+          <textarea class="form-textarea" name="description" placeholder="Décrivez ce que vous voyez : niveau de l'eau, personnes en danger, câbles électriques visibles, maisons touchées..." required></textarea>
+        </div>
+        <div class="form-groupe plein">
+          <label class="form-label">Photo de la zone (optionnel)</label>
+          <div class="zone-upload" onclick="document.getElementById('photo-input').click()">
+            <div class="zone-upload-icone">📷</div>
+            <div class="zone-upload-texte"><strong>Cliquez pour ajouter une photo</strong><br/>JPG, PNG — max 5 Mo</div>
+            <input type="file" id="photo-input" name="photo_url" accept="image/*" style="display:none" onchange="afficherPhoto(this)"/>
+          </div>
+          <div id="apercu-photo" style="display:none;margin-top:10px;">
+            <img id="img-apercu" style="max-width:100%;border-radius:10px;max-height:200px;object-fit:cover;"/>
+            <p style="font-size:0.82rem;color:#16A34A;margin-top:6px;">✅ Photo ajoutée</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="succes-message" id="succes">
+        ✅ Votre signalement a été envoyé ! Merci d'aider votre communauté. 🙏
+      </div>
+
+      <div class="form-actions">
+        <a href="dashboard.html" class="btn-secondaire">← Annuler</a>
+        <button type="submit" class="btn-signaler">🚨 Envoyer le signalement</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+function toggleMenu() {
+  const menu = document.getElementById('user-menu');
+  menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+}
+document.addEventListener('click', function(e) {
+  const menu = document.getElementById('user-menu');
+  if (menu && !e.target.closest('.nav-user')) {
+    menu.style.display = 'none';
+  }
+});
+function deconnecter() {
+  localStorage.removeItem('token');
+  localStorage.removeItem('utilisateur');
+  window.location.href = 'login.html';
+}
+function soumettre(e) {
+  e.preventDefault();
+  const succes = document.getElementById('succes');
+  succes.style.display = 'block';
+  e.target.querySelectorAll('input, select, textarea, button[type=submit]').forEach(el => el.disabled = true);
+  setTimeout(() => { window.location.href = 'dashboard.html'; }, 3000);
+}
+function afficherPhoto(input) {
+  if (input.files && input.files[0]) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      document.getElementById('img-apercu').src = e.target.result;
+      document.getElementById('apercu-photo').style.display = 'block';
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+</script>
+
+</body>
+</html>
