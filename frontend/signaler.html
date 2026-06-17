@@ -170,7 +170,7 @@ function soumettre(e) {
   const succes = document.getElementById('succes');
   succes.style.display = 'block';
   e.target.querySelectorAll('input,select,textarea,button').forEach(el => el.disabled = true);
-  setTimeout(() => { window.location.href = 'dashboard.html'; }, 2500);
+  setTimeout(() => { window.location.href = 'index.html'; }, 2500);
 }
 function afficherPhoto(input) {
   if (input.files && input.files[0]) {

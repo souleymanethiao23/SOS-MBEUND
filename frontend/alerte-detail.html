@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SOS-Mbeund — Détail Alerte</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'Outfit',sans-serif;background:#F0F4FA;min-height:100vh;display:flex;flex-direction:column;}
+    .top-nav{background:#0A3080;padding:0 3rem;height:70px;display:flex;align-items:center;justify-content:space-between;}
+    .top-nav-logo img{height:52px;object-fit:contain;}
+    .top-nav-logo-fallback{color:white;font-size:1.3rem;font-weight:700;}
+    .top-nav-links{display:flex;align-items:center;gap:2.5rem;}
+    .top-nav-links a{color:rgba(255,255,255,0.85);text-decoration:none;font-size:0.95rem;font-weight:500;}
+    .top-nav-search{padding:8px 20px;border:1.5px solid rgba(255,255,255,0.5);border-radius:25px;background:transparent;color:rgba(255,255,255,0.7);font-size:0.9rem;font-family:'Outfit',sans-serif;cursor:pointer;}
+    .layout{display:flex;flex:1;}
+    .sidebar{width:200px;background:white;border-right:1px solid #E5E7EB;padding:1.5rem 0;flex-shrink:0;}
+    .sidebar-item{display:flex;align-items:center;gap:10px;padding:12px 1.5rem;color:#374151;text-decoration:none;font-size:0.9rem;font-weight:500;border-left:3px solid transparent;}
+    .sidebar-item.active{background:#EBF3FF;color:#0A3080;border-left-color:#0A3080;font-weight:600;}
+    .main{flex:1;padding:2rem;display:flex;justify-content:center;}
+    .detail-carte{background:white;border-radius:16px;padding:2rem;width:100%;max-width:680px;box-shadow:0 2px 12px rgba(0,0,0,0.07);}
+    .btn-retour{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;background:#EBF3FF;color:#0A3080;border:none;border-radius:8px;font-size:0.82rem;font-weight:600;font-family:'Outfit',sans-serif;cursor:pointer;text-decoration:none;margin-bottom:1.2rem;}
+    .alerte-id{font-size:0.78rem;color:#9CA3AF;margin-bottom:4px;}
+    .alerte-titre-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:10px;}
+    .alerte-lieu{font-size:1.2rem;font-weight:700;color:#0D1B2A;}
+    .badges-row{display:flex;gap:8px;}
+    .badge-p{padding:5px 12px;border-radius:20px;font-size:0.78rem;font-weight:600;}
+    .badge-haute{background:#FEE2E2;color:#991B1B;}
+    .badge-urgente{background:#FEE2E2;color:#991B1B;border:1px solid #FECACA;}
+    .infos-grille{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-bottom:1.5rem;}
+    .info-bloc label{font-size:0.75rem;color:#9CA3AF;display:flex;align-items:center;gap:5px;margin-bottom:4px;}
+    .info-bloc p{font-size:0.92rem;color:#0D1B2A;font-weight:500;}
+    .niveau-section{margin-bottom:1.5rem;}
+    .niveau-titre{font-size:0.78rem;color:#9CA3AF;margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;}
+    .barre-wrapper{position:relative;background:#E5E7EB;border-radius:10px;height:10px;overflow:hidden;margin-bottom:6px;}
+    .barre-fill{height:100%;border-radius:10px;background:linear-gradient(90deg,#F59E0B,#C0392B);}
+    .barre-label{font-size:0.78rem;color:#C0392B;font-weight:600;text-align:right;}
+    .photos-section{margin-bottom:1.5rem;}
+    .section-titre{font-size:0.82rem;color:#9CA3AF;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;}
+    .photos-grille{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+    .photo-item{background:#EBF3FF;border-radius:10px;aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;gap:6px;border:1px solid #DBEAFE;transition:all 0.2s;}
+    .photo-item:hover{background:#DBEAFE;}
+    .photo-icone{font-size:1.5rem;color:#0A3080;}
+    .photo-label{font-size:0.75rem;color:#6B7280;}
+    .photo-add{background:#F9FAFB;border:2px dashed #E5E7EB;}
+    .photo-add:hover{border-color:#0A3080;background:#EBF3FF;}
+    .historique-section{margin-bottom:1.5rem;}
+    .hist-item{display:flex;gap:12px;margin-bottom:10px;align-items:flex-start;}
+    .hist-point{width:10px;height:10px;border-radius:50%;background:#0A3080;margin-top:4px;flex-shrink:0;}
+    .hist-date{font-size:0.78rem;color:#6B7280;}
+    .hist-texte{font-size:0.85rem;color:#0A3080;font-weight:500;}
+    .actions-row{display:flex;gap:10px;flex-wrap:wrap;}
+    .btn-resolu{padding:11px 20px;background:#0A3080;color:white;border:none;border-radius:9px;font-size:0.88rem;font-weight:600;font-family:'Outfit',sans-serif;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.2s;}
+    .btn-resolu:hover{background:#0D3D82;transform:translateY(-1px);}
+    .btn-modifier{padding:11px 20px;background:white;color:#374151;border:1.5px solid #E5E7EB;border-radius:9px;font-size:0.88rem;font-weight:600;font-family:'Outfit',sans-serif;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.2s;}
+    .btn-modifier:hover{background:#F9FAFB;}
+    .btn-supprimer{padding:11px 20px;background:white;color:#C0392B;border:1.5px solid #FECACA;border-radius:9px;font-size:0.88rem;font-weight:600;font-family:'Outfit',sans-serif;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.2s;}
+    .btn-supprimer:hover{background:#FEE2E2;}
+    /* MODAL CONFIRMATION */
+    .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:1000;align-items:center;justify-content:center;}
+    .modal-overlay.active{display:flex;}
+    .modal{background:white;border-radius:16px;padding:2rem;max-width:380px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.2);}
+    .modal-icone{font-size:2.5rem;text-align:center;margin-bottom:1rem;}
+    .modal-titre{font-size:1.1rem;font-weight:700;color:#0D1B2A;text-align:center;margin-bottom:0.5rem;}
+    .modal-sous{font-size:0.88rem;color:#6B7280;text-align:center;margin-bottom:1.5rem;line-height:1.5;}
+    .modal-actions{display:flex;gap:10px;}
+    .modal-btn-annuler{flex:1;padding:11px;border:1.5px solid #E5E7EB;border-radius:9px;background:white;color:#374151;font-size:0.9rem;font-weight:600;font-family:'Outfit',sans-serif;cursor:pointer;}
+    .modal-btn-annuler:hover{background:#F9FAFB;}
+    .modal-btn-confirmer{flex:1;padding:11px;border:none;border-radius:9px;color:white;font-size:0.9rem;font-weight:600;font-family:'Outfit',sans-serif;cursor:pointer;}
+    .modal-btn-confirmer.bleu{background:#0A3080;}
+    .modal-btn-confirmer.bleu:hover{background:#0D3D82;}
+    .modal-btn-confirmer.rouge{background:#C0392B;}
+    .modal-btn-confirmer.rouge:hover{background:#991B1B;}
+    footer{background:#0A3080;color:rgba(255,255,255,0.7);padding:1.5rem 3rem;}
+    .footer-content{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:0.8rem;}
+    .footer-links{display:flex;gap:1.5rem;flex-wrap:wrap;}
+    .footer-links a{color:rgba(255,255,255,0.7);text-decoration:none;font-size:0.82rem;}
+    .footer-social{display:flex;gap:8px;}
+    .social-btn{width:32px;height:32px;border-radius:7px;border:1px solid rgba(255,255,255,0.3);display:flex;align-items:center;justify-content:center;font-size:0.82rem;cursor:pointer;color:white;text-decoration:none;}
+    .footer-copy{font-size:0.78rem;color:rgba(255,255,255,0.5);border-top:1px solid rgba(255,255,255,0.1);padding-top:0.8rem;}
+  </style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <div class="top-nav-logo">
+    <img src="image.png" alt="SOS Mbeund" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/>
+    <div class="top-nav-logo-fallback" style="display:none;">🌊 SOS MBEUND</div>
+  </div>
+  <div class="top-nav-links">
+    <a href="index.html">Accueil</a>
+    <a href="signaler.html">Signaler</a>
+    <a href="#">Aide</a>
+    <button class="top-nav-search">Recherche</button>
+  </div>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar">
+    <a href="dashboard.html" class="sidebar-item active">🔔 Alertes</a>
+  </aside>
+
+  <main class="main">
+    <div class="detail-carte">
+
+      <a href="dashboard.html" class="btn-retour">← Retour aux alertes</a>
+
+      <div class="alerte-id">Alerte #A-2047</div>
+      <div class="alerte-titre-row">
+        <div class="alerte-lieu">Parcelles Assainies, Dakar</div>
+        <div class="badges-row">
+          <span class="badge-p badge-haute">🩸 Haute</span>
+          <span class="badge-p badge-urgente">Urgente</span>
+        </div>
+      </div>
+
+      <!-- NIVEAU D'EAU -->
+      <div class="niveau-section">
+        <div class="niveau-titre">Niveau d'eau</div>
+        <div class="barre-wrapper">
+          <div class="barre-fill" style="width:80%"></div>
+        </div>
+        <div class="barre-label">Haute (80%)</div>
+      </div>
+
+      <!-- INFOS -->
+      <div class="infos-grille">
+        <div class="info-bloc">
+          <label>📍 Localisation</label>
+          <p>Parcelles Assainies, Dakar</p>
+        </div>
+        <div class="info-bloc">
+          <label>📅 Date et heure</label>
+          <p>21 mai 2026 — 09h30</p>
+        </div>
+        <div class="info-bloc">
+          <label>👤 Signalé par</label>
+          <p>Citoyen anonyme</p>
+        </div>
+        <div class="info-bloc">
+          <label>📞 Contact</label>
+          <p>+221 77 000 0000</p>
+        </div>
+      </div>
+
+      <!-- PHOTOS -->
+      <div class="photos-section">
+        <div class="section-titre">Photos du signalement</div>
+        <div class="photos-grille">
+          <div class="photo-item">
+            <div class="photo-icone">📷</div>
+            <div class="photo-label">Photo 1</div>
+          </div>
+          <div class="photo-item">
+            <div class="photo-icone">📷</div>
+            <div class="photo-label">Photo 2</div>
+          </div>
+          <div class="photo-item photo-add" onclick="document.getElementById('ajout-photo').click()">
+            <div class="photo-icone" style="color:#9CA3AF;font-size:1.8rem;">＋</div>
+            <div class="photo-label">Ajouter</div>
+            <input type="file" id="ajout-photo" accept="image/*" style="display:none"/>
+          </div>
+        </div>
+      </div>
+
+      <!-- HISTORIQUE -->
+      <div class="historique-section">
+        <div class="section-titre">Historique des actions</div>
+        <div class="hist-item">
+          <div class="hist-point"></div>
+          <div>
+            <div class="hist-date">21 mai 2026 — 09h30</div>
+            <div class="hist-texte">Alerte reçue et enregistrée</div>
+          </div>
+        </div>
+        <div class="hist-item">
+          <div class="hist-point"></div>
+          <div>
+            <div class="hist-date">21 mai 2026 — 10h15</div>
+            <div class="hist-texte">Équipe d'intervention assignée</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BOUTONS ACTIONS -->
+      <div class="actions-row">
+        <button class="btn-resolu" onclick="ouvrirModal('resolu')">✓ Marquer résolu</button>
+        <button class="btn-modifier" onclick="ouvrirModal('modifier')">✏️ Modifier</button>
+        <button class="btn-supprimer" onclick="ouvrirModal('supprimer')">🗑️ Supprimer</button>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- MODAL MARQUER RÉSOLU -->
+<div class="modal-overlay" id="modal-resolu">
+  <div class="modal">
+    <div class="modal-icone">✅</div>
+    <div class="modal-titre">Marquer comme résolu ?</div>
+    <div class="modal-sous">Cette alerte sera marquée comme résolue. Cette action peut être annulée plus tard.</div>
+    <div class="modal-actions">
+      <button class="modal-btn-annuler" onclick="fermerModal('resolu')">Annuler</button>
+      <button class="modal-btn-confirmer bleu" onclick="confirmerResolu()">Confirmer</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL MODIFIER -->
+<div class="modal-overlay" id="modal-modifier">
+  <div class="modal">
+    <div class="modal-icone">✏️</div>
+    <div class="modal-titre">Modifier cette alerte ?</div>
+    <div class="modal-sous">Vous allez modifier les informations de cette alerte. Confirmez-vous ?</div>
+    <div class="modal-actions">
+      <button class="modal-btn-annuler" onclick="fermerModal('modifier')">Annuler</button>
+      <button class="modal-btn-confirmer bleu" onclick="confirmerModifier()">Confirmer</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL SUPPRIMER -->
+<div class="modal-overlay" id="modal-supprimer">
+  <div class="modal">
+    <div class="modal-icone">🗑️</div>
+    <div class="modal-titre">Supprimer cette alerte ?</div>
+    <div class="modal-sous">Cette action est irréversible. L'alerte sera définitivement supprimée.</div>
+    <div class="modal-actions">
+      <button class="modal-btn-annuler" onclick="fermerModal('supprimer')">Annuler</button>
+      <button class="modal-btn-confirmer rouge" onclick="confirmerSupprimer()">Supprimer</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-content">
+    <div class="footer-links">
+      <a href="#">Signaler un risque</a>
+      <a href="#">Carte des zones</a>
+      <a href="#">Partenaires</a>
+      <a href="#">Contact</a>
+      <a href="login.html">Connexion admin</a>
+    </div>
+    <div class="footer-social">
+      <a class="social-btn" href="#">f</a>
+      <a class="social-btn" href="#">📷</a>
+      <a class="social-btn" href="#">▶</a>
+    </div>
+  </div>
+  <div class="footer-copy">© SOS Mbeund — Tous droits réservés</div>
+</footer>
+
+<script>
+function ouvrirModal(type) {
+  document.getElementById('modal-' + type).classList.add('active');
+}
+function fermerModal(type) {
+  document.getElementById('modal-' + type).classList.remove('active');
+}
+function confirmerResolu() {
+  fermerModal('resolu');
+  alert('✅ Alerte marquée comme résolue !');
+  window.location.href = 'dashboard.html';
+}
+function confirmerModifier() {
+  fermerModal('modifier');
+  alert('✅ Modification enregistrée !');
+}
+function confirmerSupprimer() {
+  fermerModal('supprimer');
+  alert('🗑️ Alerte supprimée !');
+  window.location.href = 'dashboard.html';
+}
+// Fermer modal en cliquant dehors
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', function(e) {
+    if (e.target === this) this.classList.remove('active');
+  });
+});
+</script>
+
+</body>
+</html>
