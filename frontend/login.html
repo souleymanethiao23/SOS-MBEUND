@@ -4,230 +4,10 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>SOS-Mbeund — Connexion</title>
-  <link rel="stylesheet" href="style.css"/>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
-    * { margin:0; padding:0; box-sizing:border-box; }
-    body { font-family:'Outfit',sans-serif; background:#F0F4FA; min-height:100vh; display:flex; flex-direction:column; }
-
-    /* NAVBAR */
-    .top-nav {
-      background:#0A3080;
-      padding:0 3rem;
-      height:70px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-    }
-    .top-nav-logo img { height:52px; object-fit:contain; }
-    .top-nav-logo-fallback { color:white; font-size:1.3rem; font-weight:700; }
-    .top-nav-links { display:flex; align-items:center; gap:2.5rem; }
-    .top-nav-links a {
-      color:rgba(255,255,255,0.85);
-      text-decoration:none;
-      font-size:0.95rem;
-      font-weight:500;
-      transition:color 0.2s;
-    }
-    .top-nav-links a:hover { color:white; }
-    .top-nav-search {
-      padding:8px 20px;
-      border:1.5px solid rgba(255,255,255,0.5);
-      border-radius:25px;
-      background:transparent;
-      color:rgba(255,255,255,0.7);
-      font-size:0.9rem;
-      font-family:'Outfit',sans-serif;
-      cursor:pointer;
-    }
-
-    /* PAGE PRINCIPALE */
-    .main-content {
-      flex:1;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:3rem 1rem;
-      background:#F0F4FA;
-    }
-
-    /* CARTE LOGIN */
-    .login-carte {
-      background:white;
-      border-radius:18px;
-      padding:2.5rem 2.8rem;
-      width:100%;
-      max-width:440px;
-      box-shadow:0 4px 24px rgba(0,0,0,0.08);
-    }
-    .badge-admin {
-      display:inline-block;
-      background:#EBF3FF;
-      color:#0A3080;
-      padding:5px 14px;
-      border-radius:20px;
-      font-size:0.78rem;
-      font-weight:600;
-      letter-spacing:0.5px;
-      margin-bottom:1.2rem;
-    }
-    .login-titre {
-      font-size:1.8rem;
-      font-weight:700;
-      color:#0A3080;
-      margin-bottom:0.5rem;
-    }
-    .login-sous {
-      font-size:0.88rem;
-      color:#6B7280;
-      margin-bottom:2rem;
-      line-height:1.5;
-    }
-    .form-groupe {
-      display:flex;
-      flex-direction:column;
-      gap:6px;
-      margin-bottom:1.2rem;
-    }
-    .form-label {
-      font-size:0.88rem;
-      font-weight:500;
-      color:#374151;
-    }
-    .form-input {
-      padding:13px 16px;
-      border:1.5px solid #E5E7EB;
-      border-radius:10px;
-      font-size:0.95rem;
-      font-family:'Outfit',sans-serif;
-      color:#111827;
-      background:white;
-      transition:border-color 0.2s, box-shadow 0.2s;
-      width:100%;
-    }
-    .form-input::placeholder { color:#9CA3AF; }
-    .form-input:focus {
-      outline:none;
-      border-color:#0A3080;
-      box-shadow:0 0 0 3px rgba(10,48,128,0.08);
-    }
-    .mdp-wrapper { position:relative; }
-    .mdp-wrapper .form-input { padding-right:44px; }
-    .toggle-mdp {
-      position:absolute;
-      right:14px;
-      top:50%;
-      transform:translateY(-50%);
-      cursor:pointer;
-      font-size:1rem;
-      color:#9CA3AF;
-    }
-    .mdp-oublie {
-      text-align:right;
-      margin-top:-8px;
-      margin-bottom:1.2rem;
-    }
-    .mdp-oublie a {
-      font-size:0.83rem;
-      color:#0A3080;
-      text-decoration:none;
-      font-weight:500;
-    }
-    .mdp-oublie a:hover { text-decoration:underline; }
-    .btn-connexion {
-      width:100%;
-      padding:14px;
-      background:#0A3080;
-      color:white;
-      border:none;
-      border-radius:10px;
-      font-size:1rem;
-      font-weight:600;
-      font-family:'Outfit',sans-serif;
-      cursor:pointer;
-      transition:all 0.2s;
-      margin-bottom:1.5rem;
-    }
-    .btn-connexion:hover { background:#0D3D82; transform:translateY(-1px); }
-    .contact-admin {
-      text-align:center;
-      font-size:0.85rem;
-      color:#6B7280;
-    }
-    .contact-admin a {
-      color:#0A3080;
-      text-decoration:none;
-      font-weight:600;
-    }
-    .contact-admin a:hover { text-decoration:underline; }
-    .erreur-msg {
-      display:none;
-      background:#FEE2E2;
-      border:1px solid #FECACA;
-      border-radius:8px;
-      padding:10px 14px;
-      color:#991B1B;
-      font-size:0.85rem;
-      margin-bottom:1rem;
-      text-align:center;
-    }
-    .succes-msg {
-      display:none;
-      background:#DCFCE7;
-      border:1px solid #BBF7D0;
-      border-radius:8px;
-      padding:10px 14px;
-      color:#14532D;
-      font-size:0.85rem;
-      margin-bottom:1rem;
-      text-align:center;
-    }
-
-    /* FOOTER */
-    footer {
-      background:#0A3080;
-      color:rgba(255,255,255,0.7);
-      padding:2rem 3rem;
-    }
-    .footer-content {
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      flex-wrap:wrap;
-      gap:1rem;
-      margin-bottom:1rem;
-    }
-    .footer-links { display:flex; gap:1.5rem; flex-wrap:wrap; }
-    .footer-links a {
-      color:rgba(255,255,255,0.7);
-      text-decoration:none;
-      font-size:0.82rem;
-      transition:color 0.2s;
-    }
-    .footer-links a:hover { color:white; }
-    .footer-social { display:flex; gap:10px; }
-    .social-btn {
-      width:34px;
-      height:34px;
-      border-radius:8px;
-      border:1px solid rgba(255,255,255,0.3);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-size:0.85rem;
-      cursor:pointer;
-      transition:all 0.2s;
-      color:white;
-      text-decoration:none;
-    }
-    .social-btn:hover { background:rgba(255,255,255,0.15); }
-    .footer-copy {
-      font-size:0.78rem;
-      color:rgba(255,255,255,0.5);
-      border-top:1px solid rgba(255,255,255,0.1);
-      padding-top:1rem;
-    }
-  </style>
+  <link rel="stylesheet" href="login.css"/>  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+ 
 </head>
 <body>
 
@@ -249,9 +29,9 @@
 <div class="main-content">
   <div class="login-carte">
 
-    <span class="badge-admin">ESPACE ADMINISTRATEUR</span>
+    <span class="badge-admin">ESPACE AUTORITE</span>
     <h1 class="login-titre">Connexion</h1>
-    <p class="login-sous">Accès réservé aux administrateurs du portail SOS Mbeund.</p>
+    <p class="login-sous">Accès réservé aux autorités du portail SOS Mbeund.</p>
 
     <form id="form-login" onsubmit="connecter(event)">
 
@@ -286,23 +66,28 @@
 </div>
 
 <!-- FOOTER -->
-<footer>
-  <div class="footer-content">
-    <div class="footer-links">
-      <a href="#">Signaler un risque</a>
-      <a href="#">Carte des zones</a>
-      <a href="#">Partenaires</a>
-      <a href="#">Contact</a>
-      <a href="login.html">Connexion admin</a>
-    </div>
-    <div class="footer-social">
-      <a class="social-btn" href="#">f</a>
-      <a class="social-btn" href="#">📷</a>
-      <a class="social-btn" href="#">▶</a>
-    </div>
-  </div>
-  <div class="footer-copy">© SOS Mbeund — Tous droits réservés</div>
-</footer>
+<footer class="main-footer">
+        <div class="footer-left">
+            <div class="footer-links">
+                <a href="signaler.html">Signaler un risque</a>
+                <a href="#">Carte des zones</a>
+                <a href="#">Partenaires</a>
+                <a href="#">Contact</a>
+                <a href="login.html">Connexion autorité</a>
+            </div>
+            <p class="copyright">© SOS Mbeund — Tous droits réservés</p>
+        </div>
+        
+        <div class="footer-right">
+           <div class="social-icons">
+    <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+    <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+    <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+</div>
+            <div class="emergency-number">18 — Pompiers</div>
+        </div>
+    </footer>
+
 
 <script>
 function togglePassword() {
@@ -310,25 +95,70 @@ function togglePassword() {
   input.type = input.type === 'password' ? 'text' : 'password';
 }
 
-function connecter(e) {
+async function connecter(e) {
   e.preventDefault();
   const email = document.getElementById('email').value;
-  const mdp = document.getElementById('mot-de-passe').value;
+  const password = document.getElementById('mot-de-passe').value;
   const erreur = document.getElementById('erreur');
   const succes = document.getElementById('succes');
+  const btn = document.querySelector('.btn-connexion');
 
   erreur.style.display = 'none';
   succes.style.display = 'none';
 
-  // Connexion temporaire (sera remplacée par l'API de Kamsa)
-  if (email && mdp.length >= 4) {
-    succes.style.display = 'block';
-    localStorage.setItem('utilisateur', JSON.stringify({ email }));
-    setTimeout(() => {
-      window.location.href = 'dashboard.html';
-    }, 2000);
-  } else {
+  // Valider les champs
+  if (!email || !password) {
+    erreur.textContent = '❌ Veuillez remplir tous les champs.';
     erreur.style.display = 'block';
+    return;
+  }
+
+  try {
+    btn.disabled = true;
+    btn.textContent = 'Connexion en cours...';
+
+    // Appeler le backend
+    const response = await fetch('http://localhost:3000/api/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        email: email,
+        password: password
+      })
+    });
+
+    const data = await response.json();
+
+    if (response.ok && data.success) {
+  // Stocker le token JWT
+  localStorage.setItem('token', data.token);
+
+  // Stocker les informations utilisateur
+  localStorage.setItem('utilisateur', JSON.stringify({
+    id: data.user.id,
+    email: data.user.email,
+    role: data.user.role
+  }));
+
+      succes.style.display = 'block';
+      setTimeout(() => {
+        window.location.href = 'dashboard.html';
+      }, 1500);
+
+    } else {
+      erreur.textContent = '❌ ' + (data.message || 'Erreur de connexion');
+      erreur.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = 'Se connecter';
+    }
+  } catch (error) {
+    console.error('Erreur réseau:', error);
+    erreur.textContent = '❌ Erreur réseau : impossible de se connecter au serveur';
+    erreur.style.display = 'block';
+    btn.disabled = false;
+    btn.textContent = 'Se connecter';
   }
 }
 </script>

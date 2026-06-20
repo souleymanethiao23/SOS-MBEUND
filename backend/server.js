@@ -1,6 +1,6 @@
 //charger les variables d'environnement 
-
-require ('dotenv').config();
+require('dotenv').config({ path: '../.env' });
+console.log('JWT_SECRET au démarrage =', process.env.JWT_SECRET);
 
 // les dépendances 
 
@@ -18,17 +18,14 @@ app.use(express.urlencoded({extended: true}));
 const db = require('./config/db');
 
 
-// Routes à importer quand les autres les aurons creer
-/*
-importer les routes 
+// Routes à importer
+// Monter les routes d'alerte (habitants/autorités)
+const alertRoutes = require('./routes/alert');
 const authRoutes = require('./routes/auth');
-const alertRoutes = require('./routes/alerts);
 
-utiliser les routes 
-app.use('/api', authRoutes);
-app.use ('/api', alertRoutes )
-
-*/
+// Monter les routeurs
+app.use('/api/alerts', alertRoutes);
+app.use('/api/auth', authRoutes);
 
 //je démarre le serveur
 
