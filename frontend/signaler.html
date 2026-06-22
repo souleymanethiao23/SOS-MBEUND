@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SOS-Mbeund — Signaler</title>
+  <link rel="stylesheet" href="signaler.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+<nav class="top-nav">
+  <div class="top-nav-logo">
+    <img src="image.png" alt="SOS Mbeund" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/>
+    <div class="top-nav-logo-fallback" style="display:none;">🌊 SOS MBEUND</div>
+  </div>
+  <div class="top-nav-links">
+    <a href="index.html">Accueil</a>
+    <a href="signaler.html">Signaler</a>
+    <a href="#">Aide</a>
+    <button class="top-nav-search">Recherche</button>
+  </div>
+</nav>
+
+<div class="main-content">
+  <div class="form-carte">
+    <span class="badge">SIGNALEMENT</span>
+    <h1 class="form-titre">Soumettre une alerte</h1>
+    <p class="form-sous">Signalez une zone inondée rapidement. Les champs marqués d'un point rouge sont obligatoires.</p>
+
+    <form id="form-signalement" onsubmit="soumettre(event)">
+      <div id="succes" class="succes-msg">✅ Alerte publiée ! Merci pour votre signalement. 🙏</div>
+
+      <!-- Zone inondée -->
+      <div class="form-groupe">
+        <label class="form-label"><span class="point-rouge">•</span> Zone inondée</label>
+        <select  class="form-select" name="zone" required title="Sélectionnez la zone inondée">
+          <option value="">Sélectionnez une zone</option>
+          <option value="Pikine">Pikine</option>
+          <option value="Guédiawaye">Guédiawaye</option>
+          <option value="Parcelles Assainies">Parcelles Assainies</option>
+          <option value="Dakar Médina">Dakar — Médina</option>
+          <option value="Thiaroye">Thiaroye</option>
+          <option value="Mbao">Mbao</option>
+          <option value="Yeumbeul">Yeumbeul</option>
+          <option value="Rufisque">Rufisque</option>
+          <option value="Grand Yoff">Grand Yoff</option>
+          <option value="Thiès">Thiès</option>
+          <option value="Kaolack">Kaolack</option>
+          <option value="Saint-Louis">Saint-Louis</option>
+          <option value="Autre">Autre</option>
+        </select>
+      </div>
+
+      <!-- Téléphone -->
+      <div class="form-groupe">
+        <label class="form-label"><span class="point-rouge">•</span> Numéro de téléphone</label>
+        <div class="tel-wrapper">
+          <span class="tel-prefix">+221</span>
+          <input type="tel" class="form-input" name="telephone" placeholder="77 000 00 00"/>
+        </div>
+      </div>
+
+      <!-- Niveau gravité -->
+      <div class="form-groupe">
+        <label class="form-label"><span class="point-rouge">•</span> Niveau de gravité</label>
+        <select class="form-select" name="niveau_gravite" required title="Sélectionnez le niveau de gravité">
+          <option value="">Sélectionnez un niveau</option>
+          <option value="critique">🔴 Urgente — Critique</option>
+          <option value="eleve">🟠 Haute</option>
+          <option value="moyen">🟡 Moyenne</option>
+          <option value="faible">🟢 Faible</option>
+        </select>
+      </div>
+
+      <!-- Description -->
+      <div class="form-groupe">
+        <label class="form-label"><span class="point-rouge">•</span> Description</label>
+        <textarea class="form-textarea" name="description" placeholder="Décrivez la situation : niveau de l'eau, zone touchée, personnes en danger..." required></textarea>
+      </div>
+
+      <!-- Photo -->
+      <div class="zone-upload" onclick="document.getElementById('photo-input').click()">
+        <div class="upload-titre">📎 Ajouter une photo ou un fichier</div>
+        <div class="upload-sous">Glissez-déposez ou cliquez pour parcourir</div>
+        <input type="file" id="photo-input" name="photo" accept="image/*" style="display:none" onchange="afficherPhoto(this)"/>
+      </div>
+      <div id="apercu-photo" style="display:none;margin-top:10px;">
+        <img id="img-apercu" style="max-width:100%;border-radius:10px;max-height:180px;object-fit:cover;"/>
+        <p style="font-size:0.82rem;color:#16A34A;margin-top:6px;">✅ Photo ajoutée</p>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn-annuler" onclick="window.location.href='dashboard.html'">Annuler</button>
+        <button type="submit" class="btn-publier">Publier l'alerte</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<footer class="main-footer">
+        <div class="footer-left">
+            <div class="footer-links">
+                <a href="signaler.html">Signaler un risque</a>
+                <a href="#">Carte des zones</a>
+                <a href="#">Partenaires</a>
+                <a href="#">Contact</a>
+                <a href="login.html">Connexion autorité</a>
+            </div>
+            <p class="copyright">© SOS Mbeund — Tous droits réservés</p>
+        </div>
+        
+        <div class="footer-right">
+           <div class="social-icons">
+    <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+    <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+    <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+</div>
+            <div class="emergency-number">18 — Pompiers</div>
+        </div>
+    </footer>
+
+
+<script>
+async function soumettre(e) {
+  e.preventDefault();
+  
+  const form = e.target;
+  const formData = new FormData(form);
+  
+  // Valider le téléphone
+  const telephone = formData.get('telephone');
+  if (!telephone || telephone.trim().length === 0) {
+    alert('Le téléphone est obligatoire');
+    return;
+  }
+  
+  try {
+    // Désactiver le bouton
+    const btnPublier = form.querySelector('.btn-publier');
+    btnPublier.disabled = true;
+    btnPublier.textContent = 'Envoi en cours...';
+    
+    // Envoyer au backend
+    const response = await fetch('http://localhost:3000/api/alerts', {
+      method: 'POST',
+      body: formData
+    });
+    
+    const data = await response.json();
+    
+    if (response.ok && data.success) {
+      // Afficher succès
+      const succes = document.getElementById('succes');
+      succes.style.display = 'block';
+      form.querySelectorAll('input,select,textarea,button').forEach(el => el.disabled = true);
+      
+      // Rediriger après 2.5s
+      setTimeout(() => { window.location.href = 'dashboard.html'; }, 2500);
+    } else {
+      alert('Erreur : ' + (data.message || 'Une erreur est survenue'));
+      btnPublier.disabled = false;
+      btnPublier.textContent = 'Publier l\'alerte';
+    }
+  } catch (error) {
+    console.error('Erreur réseau:', error);
+    alert('Erreur réseau : impossible de se connecter au serveur');
+    const btnPublier = form.querySelector('.btn-publier');
+    btnPublier.disabled = false;
+    btnPublier.textContent = 'Publier l\'alerte';
+  }
+}
+
+function afficherPhoto(input) {
+  if (input.files && input.files[0]) {
+    const reader = new FileReader();
+    reader.onload = e => {
+      document.getElementById('img-apercu').src = e.target.result;
+      document.getElementById('apercu-photo').style.display = 'block';
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+</script>
+</body>
+</html>

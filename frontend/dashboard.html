@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SOS-Mbeund — Dashboard</title>
+  <link rel="stylesheet" href="dashboard.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+</head>
+<body>
+
+<nav class="top-nav">
+  <div class="top-nav-logo">
+    <img src="image.png" alt="SOS Mbeund" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/>
+    <div class="top-nav-logo-fallback" style="display:none;">🌊 SOS MBEUND</div>
+  </div>
+  <div class="top-nav-links">
+    <a href="index.html">Accueil</a>
+    <a href="signaler.html">Signaler</a>
+    <a href="#">Aide</a>
+    <button class="top-nav-search">Recherche</button>
+  </div>
+  <div class="admin-badge" onclick="toggleMenu()">
+    <div class="admin-avatar">A</div>
+    <span class="admin-nom">Autorité connecté</span>
+  </div>
+  <div class="user-menu" id="user-menu">
+    <div class="user-menu-info">
+      <div class="user-menu-nom">Maire</div>
+      <div class="user-menu-email">maire@rep.sn</div>
+      <div class="user-menu-role">● Autorité</div>
+    </div>
+    <a href="#" class="user-menu-item">👤 Mon profil</a>
+    <a href="#" class="user-menu-item">⚙️ Paramètres</a>
+    <a href="login.html" class="user-menu-deco" onclick="deconnecter()">🚪 Se déconnecter</a>
+  </div>
+</nav>
+
+<div class="layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <a href="alertes.html" class="sidebar-item active">🔔 Alertes</a>
+  </aside>
+
+  <!-- CONTENU -->
+  <main class="main">
+    <div class="main-header">
+      <h1 class="main-titre">Liste des alertes</h1>
+      <a href="signaler.html" class="btn-nouvelle">⊕ Nouvelle alerte</a>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-grille">
+      <div class="stat-bloc">
+        <div class="stat-label">Total</div>
+        <div class="stat-nombre gris" id="stat-total">0</div>
+      </div>
+      <div class="stat-bloc">
+        <div class="stat-label">Urgentes</div>
+        <div class="stat-nombre rouge" id="stat-urgentes">0</div>
+      </div>
+      <div class="stat-bloc">
+        <div class="stat-label">En cours</div>
+        <div class="stat-nombre bleu" id="stat-encours">0</div>
+      </div>
+      <div class="stat-bloc">
+        <div class="stat-label">Résolues</div>
+        <div class="stat-nombre vert" id="stat-resolues">0</div>
+      </div>
+    </div>
+
+    <!-- FILTRES -->
+    <div class="filtres">
+      <input type="text" class="filtre-input" placeholder="Rechercher une zone..."/>
+      <select class="filtre-input" title="Filtrer par priorité">
+        <option>Toutes priorités</option>
+        <option>Haute</option>
+        <option>Moyenne</option>
+        <option>Faible</option>
+      </select>
+      <select class="filtre-input" title="Filtrer par statut">
+        <option>Tous statuts</option>
+        <option>Urgente</option>
+        <option>En cours</option>
+        <option>Résolu</option>
+      </select>
+      <select class="filtre-input" title="Trier par date">
+        <option>Plus récentes</option>
+        <option>Plus anciennes</option>
+      </select>
+    </div>
+
+    <!-- TABLEAU -->
+    <div class="table-bloc">
+      <table>
+        <thead>
+          <tr>
+            <th>Zone</th>
+            <th>Date</th>
+            <th>Priorité</th>
+            <th>Statut</th>
+            <th>Signalé par</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="table-alertes">
+          <tr id="vide" style="display:none;">
+            <td colspan="6" style="text-align:center;padding:2rem;color:#999;">Aucune alerte pour le moment</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+<footer class="main-footer">
+        <div class="footer-left">
+            <div class="footer-links">
+                <a href="signaler.html">Signaler un risque</a>
+                <a href="#">Carte des zones</a>
+                <a href="#">Partenaires</a>
+                <a href="#">Contact</a>
+                <a href="login.html">Connexion autorité</a>
+            </div>
+            <p class="copyright">© SOS Mbeund — Tous droits réservés</p>
+        </div>
+        
+        <div class="footer-right">
+           <div class="social-icons">
+    <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+    <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+    <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+</div>
+            <div class="emergency-number">18 — Pompiers</div>
+        </div>
+    </footer>
+
+<script>
+// Vérifier l'authentification
+function verifierAuth() {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    window.location.href = 'login.html';
+    return false;
+  }
+  return true;
+}
+
+// Formater la date
+function formaterDate(dateStr) {
+  if (!dateStr) return '';
+  const date = new Date(dateStr);
+  const jour = date.getDate().toString().padStart(2, '0');
+  const mois = date.getMonth() + 1;
+  const mois_fr = ['jan', 'fév', 'mar', 'avr', 'mai', 'juin', 'juil', 'aoû', 'sep', 'oct', 'nov', 'déc'][mois - 1];
+  const heure = date.getHours().toString().padStart(2, '0');
+  const min = date.getMinutes().toString().padStart(2, '0');
+  return `${jour} ${mois_fr} — ${heure}h${min}`;
+}
+
+// Mapper priorité
+function mapperPriorite(niveau) {
+  const map = {
+    'critique': { label: '● Urgente', class: 'p-urgente' },
+    'eleve': { label: '● Haute', class: 'p-haute' },
+    'moyen': { label: '● Moyenne', class: 'p-moyenne' },
+    'faible': { label: '● Faible', class: 'p-faible' }
+  };
+  return map[niveau] || { label: '● Moyenne', class: 'p-moyenne' };
+}
+
+// Mapper statut
+function mapperStatut(statut) {
+  const map = {
+    'en attente': { label: '● En attente', class: 's-attente' },
+    'en cours': { label: '● En cours', class: 's-encours' },
+    'resolu': { label: '● Résolu', class: 's-resolu' },
+    'critique': { label: '● Urgente', class: 's-urgente' }
+  };
+  return map[statut] || { label: '● En cours' + statut, class: 's-encours' };
+}
+
+// Masquer téléphone
+function masquerTelephone(tel) {
+  if (!tel) return '+221 ·· ···';
+  return '+221 ' + tel.slice(2, 4) + ' ' + tel.slice(4, 6) + '··';
+}
+
+// Charger les alertes
+async function chargerAlertes() {
+  if (!verifierAuth()) return;
+
+  const token = localStorage.getItem('token');
+  
+  try {
+    const response = await fetch('http://localhost:3000/api/alerts', {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    if (!response.ok) {
+      if (response.status === 401) {
+        localStorage.removeItem('token');
+        window.location.href = 'login.html';
+        return;
+      }
+      throw new Error('Erreur lors du chargement');
+    }
+
+    const data = await response.json();
+    const alertes = data.data || [];
+
+    // Calculer stats
+    let total = alertes.length;
+    let urgentes = alertes.filter(a => a.niveau_gravite === 'critique').length;
+    let encours = alertes.filter(a => a.statut === 'en cours').length;
+    let resolues = alertes.filter(a => a.statut === 'resolu').length;
+
+    // Mettre à jour stats
+    document.getElementById('stat-total').textContent = total;
+    document.getElementById('stat-urgentes').textContent = urgentes;
+    document.getElementById('stat-encours').textContent = encours;
+    document.getElementById('stat-resolues').textContent = resolues;
+
+    // Remplir tableau
+    const tbody = document.getElementById('table-alertes');
+    tbody.innerHTML = '';
+
+    if (alertes.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:2rem;color:#999;">Aucune alerte pour le moment</td></tr>';
+      return;
+    }
+
+    alertes.forEach((alerte, idx) => {
+  const priorite = mapperPriorite(alerte.niveau_gravite);
+  const statut = mapperStatut(alerte.statut);
+  const tel = masquerTelephone(alerte.telephone);
+  const date = formaterDate(alerte.created_at);
+
+  const row = `
+    <tr>
+      <td><div class="zone-cell"><span class="zone-icon">📍</span>${alerte.zone || 'Non spécifiée'}</div></td>
+      <td>${date}</td>
+      <td><span class="badge-priorite ${priorite.class}">${priorite.label}</span></td>
+      <td><span class="badge-statut ${statut.class}">${statut.label}</span></td>
+      <td>${tel}</td>
+      <td><a href="alerte-detail.html?id=${alerte.id_signalisation}" class="btn-voir">Voir</a></td>
+    </tr>
+  `;
+  tbody.innerHTML += row;
+});
+  } catch (error) {
+    console.error('Erreur:', error);
+    document.getElementById('table-alertes').innerHTML = '<tr><td colspan="6" style="text-align:center;padding:2rem;color:#d32f2f;">⚠️ Erreur de connexion au serveur</td></tr>';
+  }
+}
+
+function toggleMenu() {
+  const menu = document.getElementById('user-menu');
+  menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+}
+
+document.addEventListener('click', function(e) {
+  const menu = document.getElementById('user-menu');
+  if (menu && !e.target.closest('.admin-badge') && !e.target.closest('.user-menu')) {
+    menu.style.display = 'none';
+  }
+});
+
+function deconnecter() {
+  localStorage.removeItem('token');
+  localStorage.removeItem('utilisateur');
+}
+
+// Charger au démarrage
+document.addEventListener('DOMContentLoaded', chargerAlertes);
+
+// Rafraîchir toutes les 30 secondes
+setInterval(chargerAlertes, 30000);
+</script>
+</body>
+</html>

@@ -2,7 +2,7 @@
 const router = express.Router();
 const authController = require('../controllers/authController');
 
-router.post('/register', authController.register);
+// Route pour les autorites (uniquement login)
 router.post('/login', authController.login);
 
 module.exports = router;

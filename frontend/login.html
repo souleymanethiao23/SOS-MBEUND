@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SOS-Mbeund — Connexion</title>
+  <link rel="stylesheet" href="login.css"/>  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+ 
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="top-nav">
+  <div class="top-nav-logo">
+    <img src="image.png" alt="SOS Mbeund" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/>
+    <div class="top-nav-logCLSo-fallback" style="display:none;">🌊 SOS MBEUND</div>
+  </div>
+  <div class="top-nav-links">
+    <a href="index.html">Accueil</a>
+    <a href="signaler.html">Signaler</a>
+    <a href="#">Aide</a>
+    <button class="top-nav-search">Recherche</button>
+  </div>
+</nav>
+
+<!-- CONTENU PRINCIPAL -->
+<div class="main-content">
+  <div class="login-carte">
+
+    <span class="badge-admin">ESPACE AUTORITE</span>
+    <h1 class="login-titre">Connexion</h1>
+    <p class="login-sous">Accès réservé aux autorités du portail SOS Mbeund.</p>
+
+    <form id="form-login" onsubmit="connecter(event)">
+
+      <div id="erreur" class="erreur-msg">❌ Email ou mot de passe incorrect.</div>
+      <div id="succes" class="succes-msg">✅ Connexion réussie ! Redirection...</div>
+
+      <div class="form-groupe">
+        <label class="form-label">Email ou Nom d'utilisateur</label>
+        <input type="text" id="email" class="form-input" placeholder="Entrez votre identifiant" required/>
+      </div>
+
+      <div class="form-groupe">
+        <label class="form-label">Mot de passe</label>
+        <div class="mdp-wrapper">
+          <input type="password" id="mot-de-passe" class="form-input" placeholder="••••••••" required/>
+          <span class="toggle-mdp" onclick="togglePassword()">👁️</span>
+        </div>
+      </div>
+
+      <div class="mdp-oublie">
+        <a href="#">Mot de passe oublié ?</a>
+      </div>
+
+      <button type="submit" class="btn-connexion">Se connecter</button>
+
+      <div class="contact-admin">
+        Pas encore de compte ? <a href="#">Contacter l'administrateur</a>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="main-footer">
+        <div class="footer-left">
+            <div class="footer-links">
+                <a href="signaler.html">Signaler un risque</a>
+                <a href="#">Carte des zones</a>
+                <a href="#">Partenaires</a>
+                <a href="#">Contact</a>
+                <a href="login.html">Connexion autorité</a>
+            </div>
+            <p class="copyright">© SOS Mbeund — Tous droits réservés</p>
+        </div>
+        
+        <div class="footer-right">
+           <div class="social-icons">
+    <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+    <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+    <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+</div>
+            <div class="emergency-number">18 — Pompiers</div>
+        </div>
+    </footer>
+
+
+<script>
+function togglePassword() {
+  const input = document.getElementById('mot-de-passe');
+  input.type = input.type === 'password' ? 'text' : 'password';
+}
+
+async function connecter(e) {
+  e.preventDefault();
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('mot-de-passe').value;
+  const erreur = document.getElementById('erreur');
+  const succes = document.getElementById('succes');
+  const btn = document.querySelector('.btn-connexion');
+
+  erreur.style.display = 'none';
+  succes.style.display = 'none';
+
+  // Valider les champs
+  if (!email || !password) {
+    erreur.textContent = '❌ Veuillez remplir tous les champs.';
+    erreur.style.display = 'block';
+    return;
+  }
+
+  try {
+    btn.disabled = true;
+    btn.textContent = 'Connexion en cours...';
+
+    // Appeler le backend
+    const response = await fetch('http://localhost:3000/api/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        email: email,
+        password: password
+      })
+    });
+
+    const data = await response.json();
+
+    if (response.ok && data.success) {
+  // Stocker le token JWT
+  localStorage.setItem('token', data.token);
+
+  // Stocker les informations utilisateur
+  localStorage.setItem('utilisateur', JSON.stringify({
+    id: data.user.id,
+    email: data.user.email,
+    role: data.user.role
+  }));
+
+      succes.style.display = 'block';
+      setTimeout(() => {
+        window.location.href = 'dashboard.html';
+      }, 1500);
+
+    } else {
+      erreur.textContent = '❌ ' + (data.message || 'Erreur de connexion');
+      erreur.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = 'Se connecter';
+    }
+  } catch (error) {
+    console.error('Erreur réseau:', error);
+    erreur.textContent = '❌ Erreur réseau : impossible de se connecter au serveur';
+    erreur.style.display = 'block';
+    btn.disabled = false;
+    btn.textContent = 'Se connecter';
+  }
+}
+</script>
+
+</body>
+</html>

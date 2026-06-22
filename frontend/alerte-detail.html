@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SOS-Mbeund — Détail Alerte</title>
+  <link rel="stylesheet" href="alerte-detail.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+</head>
+<body>
+
+<nav class="top-nav">
+  <div class="top-nav-logo">
+    <img src="image.png" alt="SOS Mbeund" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/>
+    <div class="top-nav-logo-fallback" style="display:none;">🌊 SOS MBEUND</div>
+  </div>
+  <div class="top-nav-links">
+    <a href="index.html">Accueil</a>
+    <a href="signaler.html">Signaler</a>
+    <a href="#">Aide</a>
+    <button class="top-nav-search">Recherche</button>
+  </div>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar">
+    <a href="dashboard.html" class="sidebar-item active">🔔 Alertes</a>
+  </aside>
+
+  <main class="main">
+    <div class="detail-carte">
+
+      <a href="dashboard.html" class="btn-retour">← Retour aux alertes</a>
+
+      <div class="alerte-id">Alerte #A-2047</div>
+      <div class="alerte-titre-row">
+        <div class="alerte-lieu">Parcelles Assainies, Dakar</div>
+        <div class="badges-row">
+          <span class="badge-p badge-haute">🩸 Haute</span>
+          <span class="badge-p badge-urgente">Urgente</span>
+        </div>
+      </div>
+
+      <!-- NIVEAU D'EAU -->
+      <div class="niveau-section">
+        <div class="niveau-titre">Niveau d'eau</div>
+        <div class="barre-wrapper">
+          <div class="barre-fill" style="width:80%"></div>
+        </div>
+        <div class="barre-label">Haute (80%)</div>
+      </div>
+
+      <!-- INFOS -->
+      <div class="infos-grille">
+        <div class="info-bloc">
+          <label>📍 Localisation</label>
+          <p>Parcelles Assainies, Dakar</p>
+        </div>
+        <div class="info-bloc">
+          <label>📅 Date et heure</label>
+          <p>21 mai 2026 — 09h30</p>
+        </div>
+        <div class="info-bloc">
+          <label>👤 Signalé par</label>
+          <p>Citoyen anonyme</p>
+        </div>
+        <div class="info-bloc">
+          <label>📞 Contact</label>
+          <p>+221 77 000 0000</p>
+        </div>
+      </div>
+
+      <!-- PHOTOS -->
+      <div class="photos-section">
+        <div class="section-titre">Photos du signalement</div>
+        <div class="photos-grille">
+          <div class="photo-item">
+            <div class="photo-icone">📷</div>
+            <div class="photo-label">Photo 1</div>
+          </div>
+          <div class="photo-item">
+            <div class="photo-icone">📷</div>
+            <div class="photo-label">Photo 2</div>
+          </div>
+          <div class="photo-item photo-add" onclick="document.getElementById('ajout-photo').click()">
+            <div class="photo-icone" style="color:#9CA3AF;font-size:1.8rem;">＋</div>
+            <div class="photo-label">Ajouter</div>
+            <input type="file" id="ajout-photo" accept="image/*" style="display:none"/>
+          </div>
+        </div>
+      </div>
+
+      <!-- HISTORIQUE -->
+      <div class="historique-section">
+        <div class="section-titre">Historique des actions</div>
+        <div class="hist-item">
+          <div class="hist-point"></div>
+          <div>
+            <div class="hist-date">21 mai 2026 — 09h30</div>
+            <div class="hist-texte">Alerte reçue et enregistrée</div>
+          </div>
+        </div>
+        <div class="hist-item">
+          <div class="hist-point"></div>
+          <div>
+            <div class="hist-date">21 mai 2026 — 10h15</div>
+            <div class="hist-texte">Équipe d'intervention assignée</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BOUTONS ACTIONS -->
+      <div class="actions-row">
+        <button class="btn-resolu" onclick="ouvrirModal('resolu')">✓ Marquer résolu</button>
+        <button class="btn-modifier" onclick="ouvrirModal('modifier')">✏️ Modifier</button>
+        <button class="btn-supprimer" onclick="ouvrirModal('supprimer')">🗑️ Supprimer</button>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- MODAL MARQUER RÉSOLU -->
+<div class="modal-overlay" id="modal-resolu">
+  <div class="modal">
+    <div class="modal-icone">✅</div>
+    <div class="modal-titre">Marquer comme résolu ?</div>
+    <div class="modal-sous">Cette alerte sera marquée comme résolue. Cette action peut être annulée plus tard.</div>
+    <div class="modal-actions">
+      <button class="modal-btn-annuler" onclick="fermerModal('resolu')">Annuler</button>
+      <button class="modal-btn-confirmer bleu" onclick="confirmerResolu()">Confirmer</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL MODIFIER -->
+<div class="modal-overlay" id="modal-modifier">
+  <div class="modal">
+    <div class="modal-icone">✏️</div>
+    <div class="modal-titre">Modifier cette alerte ?</div>
+    <div class="modal-sous">Vous allez modifier les informations de cette alerte. Confirmez-vous ?</div>
+    <div class="modal-actions">
+      <button class="modal-btn-annuler" onclick="fermerModal('modifier')">Annuler</button>
+      <button class="modal-btn-confirmer bleu" onclick="confirmerModifier()">Confirmer</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL SUPPRIMER -->
+<div class="modal-overlay" id="modal-supprimer">
+  <div class="modal">
+    <div class="modal-icone">🗑️</div>
+    <div class="modal-titre">Supprimer cette alerte ?</div>
+    <div class="modal-sous">Cette action est irréversible. L'alerte sera définitivement supprimée.</div>
+    <div class="modal-actions">
+      <button class="modal-btn-annuler" onclick="fermerModal('supprimer')">Annuler</button>
+      <button class="modal-btn-confirmer rouge" onclick="confirmerSupprimer()">Supprimer</button>
+    </div>
+  </div>
+</div>
+
+<footer class="main-footer">
+        <div class="footer-left">
+            <div class="footer-links">
+                <a href="signaler.html">Signaler un risque</a>
+                <a href="#">Carte des zones</a>
+                <a href="#">Partenaires</a>
+                <a href="#">Contact</a>
+                <a href="login.html">Connexion autorité</a>
+            </div>
+            <p class="copyright">© SOS Mbeund — Tous droits réservés</p>
+        </div>
+        
+        <div class="footer-right">
+           <div class="social-icons">
+    <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+    <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+    <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+</div>
+            <div class="emergency-number">18 — Pompiers</div>
+        </div>
+    </footer>
+
+<script>
+// Récupérer l'ID depuis l'URL
+function getUrlParameter(name) {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get(name);
+}
+
+// Vérifier l'authentification
+function verifierAuth() {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    window.location.href = 'login.html';
+    return false;
+  }
+  return true;
+}
+
+// Formater la date
+function formaterDate(dateStr) {
+  if (!dateStr) return '';
+  const date = new Date(dateStr);
+  const jour = date.getDate().toString().padStart(2, '0');
+  const mois = date.getMonth() + 1;
+  const mois_fr = ['jan', 'fév', 'mar', 'avr', 'mai', 'juin', 'juil', 'aoû', 'sep', 'oct', 'nov', 'déc'][mois - 1];
+  const heure = date.getHours().toString().padStart(2, '0');
+  const min = date.getMinutes().toString().padStart(2, '0');
+  return `${jour} ${mois_fr} — ${heure}h${min}`;
+}
+
+// Charger les détails de l'alerte
+async function chargerDetailAlerte() {
+  if (!verifierAuth()) return;
+
+  const id = getUrlParameter('id');
+  if (!id) {
+    window.location.href = 'dashboard.html';
+    return;
+  }
+
+  const token = localStorage.getItem('token');
+
+  try {
+    const response = await fetch(`http://localhost:3000/api/alerts/${id}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    if (!response.ok) {
+      if (response.status === 401) {
+        localStorage.removeItem('token');
+        window.location.href = 'login.html';
+        return;
+      }
+      throw new Error('Erreur lors du chargement');
+    }
+
+    const data = await response.json();
+    const alerte = data.data;
+
+    // Mettre à jour l'interface avec les données
+    document.querySelector('.alerte-id').textContent = `Alerte #A-${alerte.id_signalisation}`;
+    document.querySelector('.alerte-lieu').textContent = alerte.zone || 'Non spécifiée';
+    
+    // Mettre à jour les badges de priorité
+    const badgesRow = document.querySelector('.badges-row');
+    if (alerte.niveau_gravite === 'critique') {
+      badgesRow.innerHTML = `
+        <span class="badge-p badge-urgente">🩸 Urgente</span>
+      `;
+    } else if (alerte.niveau_gravite === 'eleve') {
+      badgesRow.innerHTML = `
+        <span class="badge-p badge-haute">🩸 Haute</span>
+      `;
+    } else if (alerte.niveau_gravite === 'moyen') {
+      badgesRow.innerHTML = `
+        <span class="badge-p badge-moyenne">🟡 Moyenne</span>
+      `;
+    } else {
+      badgesRow.innerHTML = `
+        <span class="badge-p badge-faible">🟢 Faible</span>
+      `;
+    }
+
+    // Mettre à jour le niveau d'eau (si disponible)
+    if (alerte.niveau_eau) {
+      const niveau = Math.min(parseInt(alerte.niveau_eau) || 0, 100);
+      document.querySelector('.barre-fill').style.width = niveau + '%';
+      document.querySelector('.barre-label').textContent = `${niveau}%`;
+    }
+
+    // Mettre à jour les infos
+    const infoBlocs = document.querySelectorAll('.info-bloc');
+    infoBlocs[0].querySelector('p').textContent = alerte.zone || 'Non spécifiée';
+    infoBlocs[1].querySelector('p').textContent = formaterDate(alerte.created_at);
+    infoBlocs[2].querySelector('p').textContent = alerte.nom || 'Citoyen anonyme';
+    infoBlocs[3].querySelector('p').textContent = alerte.telephone || '+221 77 00 00 00';
+
+    // Mettre à jour l'historique (si disponible)
+    const historiqueSection = document.querySelector('.historique-section');
+    if (alerte.historique && alerte.historique.length > 0) {
+      historiqueSection.innerHTML = `
+        <div class="section-titre">Historique des actions</div>
+        ${alerte.historique.map(h => `
+          <div class="hist-item">
+            <div class="hist-point"></div>
+            <div>
+              <div class="hist-date">${formaterDate(h.date)}</div>
+              <div class="hist-texte">${h.action}</div>
+            </div>
+          </div>
+        `).join('')}
+      `;
+    }
+
+  } catch (error) {
+    console.error('Erreur:', error);
+    document.querySelector('.detail-carte').innerHTML = `
+      <a href="dashboard.html" class="btn-retour">← Retour aux alertes</a>
+      <div style="text-align:center;padding:3rem;color:#d32f2f;">
+        ⚠️ Erreur de connexion au serveur<br>
+        <button onclick="location.reload()" style="margin-top:1rem;padding:0.5rem 1rem;">Réessayer</button>
+      </div>
+    `;
+  }
+}
+
+// Fonctions des modales
+function ouvrirModal(type) {
+  document.getElementById('modal-' + type).classList.add('active');
+}
+
+function fermerModal(type) {
+  document.getElementById('modal-' + type).classList.remove('active');
+}
+
+// Confirmer marquer résolu
+async function confirmerResolu() {
+  fermerModal('resolu');
+  const id = getUrlParameter('id');
+  const token = localStorage.getItem('token');
+  
+  try {
+    const response = await fetch(`http://localhost:3000/api/alerts/${id}`, {
+      method: 'PATCH',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ statut: 'resolu' })
+    });
+    
+    if (response.ok) {
+      alert('✅ Alerte marquée comme résolue !');
+      window.location.href = 'dashboard.html';
+    } else {
+      alert('❌ Erreur lors du changement de statut');
+    }
+  } catch (error) {
+    console.error('Erreur:', error);
+    alert('❌ Erreur de connexion au serveur');
+  }
+}
+
+// Confirmer suppression
+async function confirmerSupprimer() {
+  fermerModal('supprimer');
+  const id = getUrlParameter('id');
+  const token = localStorage.getItem('token');
+  
+  try {
+    const response = await fetch(`http://localhost:3000/api/alerts/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    
+    if (response.ok) {
+      alert('🗑️ Alerte supprimée !');
+      window.location.href = 'dashboard.html';
+    } else {
+      alert('❌ Erreur lors de la suppression');
+    }
+  } catch (error) {
+    console.error('Erreur:', error);
+    alert('❌ Erreur de connexion au serveur');
+  }
+}
+
+function confirmerModifier() {
+  fermerModal('modifier');
+  alert('✅ Modification enregistrée !');
+}
+
+// Fermer modal en cliquant dehors
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', function(e) {
+    if (e.target === this) this.classList.remove('active');
+  });
+});
+
+// Charger au démarrage
+document.addEventListener('DOMContentLoaded', chargerDetailAlerte);
+</script>
+
+</body>
+</html>
