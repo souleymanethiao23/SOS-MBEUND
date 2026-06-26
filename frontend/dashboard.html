@@ -18,7 +18,7 @@
   <div class="top-nav-links">
     <a href="index.html">Accueil</a>
     <a href="signaler.html">Signaler</a>
-    <a href="#">Aide</a>
+    <a href="aide.html">Aide</a>
     <button class="top-nav-search">Recherche</button>
   </div>
   <div class="admin-badge" onclick="toggleMenu()">
@@ -39,9 +39,15 @@
 
 <div class="layout">
   <!-- SIDEBAR -->
-  <aside class="sidebar">
-    <a href="alertes.html" class="sidebar-item active">🔔 Alertes</a>
-  </aside>
+  
+<aside class="sidebar">
+  <a class="sidebar-item active" style="cursor: pointer;">
+    🔔 Alertes
+    <span id="notif-badge" class="notif-badge" style="display:none;">0</span>
+  </a>
+</aside>
+</aside>
+
 
   <!-- CONTENU -->
   <main class="main">
@@ -118,7 +124,7 @@
         <div class="footer-left">
             <div class="footer-links">
                 <a href="signaler.html">Signaler un risque</a>
-                <a href="#">Carte des zones</a>
+                <a href="aide.html">Aide</a>
                 <a href="#">Partenaires</a>
                 <a href="#">Contact</a>
                 <a href="login.html">Connexion autorité</a>
@@ -171,14 +177,23 @@ function mapperPriorite(niveau) {
 }
 
 // Mapper statut
+// Mapper statut
 function mapperStatut(statut) {
   const map = {
-    'en attente': { label: '● En attente', class: 's-attente' },
-    'en cours': { label: '● En cours', class: 's-encours' },
-    'resolu': { label: '● Résolu', class: 's-resolu' },
-    'critique': { label: '● Urgente', class: 's-urgente' }
+    'recue': { label: 'Reçue', class: 'badge-attente' },
+    'en_cours': { label: 'En cours', class: 'badge-encours' },
+    'resolue': { label: 'Résolue', class: 'badge-resolu' },
+    'rejetee': { label: 'Rejetée', class: 'badge-rejetee' },
+    'critique': { label: 'Urgente', class: 'badge-urgente' }
   };
-  return map[statut] || { label: '● En cours' + statut, class: 's-encours' };
+  
+  // Si le statut n'est pas dans la map, on affiche le statut brut
+  if (map[statut]) {
+    return map[statut];
+  }
+  
+  // Fallback
+  return { label: statut || 'Reçue', class: 'badge-encours' };
 }
 
 // Masquer téléphone
@@ -215,9 +230,18 @@ async function chargerAlertes() {
 
     // Calculer stats
     let total = alertes.length;
+    /*let urgentes = alertes.filter(a => a.niveau_gravite === 'critique').length;
+    let encours = alertes.filter(a => a.statut === 'en_cours').length;
+    let resolues = alertes.filter(a => a.statut === 'resolu').length;*/
     let urgentes = alertes.filter(a => a.niveau_gravite === 'critique').length;
-    let encours = alertes.filter(a => a.statut === 'en cours').length;
-    let resolues = alertes.filter(a => a.statut === 'resolu').length;
+    let encours = alertes.filter(
+  a => a.statut === 'en_cours'
+).length;
+
+let resolues = alertes.filter(
+  a => a.statut === 'resolue'
+).length;
+    
 
     // Mettre à jour stats
     document.getElementById('stat-total').textContent = total;
@@ -234,7 +258,7 @@ async function chargerAlertes() {
       return;
     }
 
-    alertes.forEach((alerte, idx) => {
+   alertes.forEach((alerte, idx) => {
   const priorite = mapperPriorite(alerte.niveau_gravite);
   const statut = mapperStatut(alerte.statut);
   const tel = masquerTelephone(alerte.telephone);
@@ -269,17 +293,150 @@ document.addEventListener('click', function(e) {
     menu.style.display = 'none';
   }
 });
+// --- GESTION DES NOTIFICATIONS ---
+
+// 1. Charger les notifications depuis l'API
+async function chargerNotifications() {
+  const token = localStorage.getItem('token');
+  if (!token) return;
+
+  try {
+    const response = await fetch('http://localhost:3000/api/notifications', {
+      method: 'GET',
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      const notifications = data.data || [];
+
+      // Compter les notifications non lues
+      const nonLues = notifications.filter(n => n.lu === 0).length;
+
+      // Mettre à jour le badge
+      const badge = document.getElementById('notif-badge');
+      if (badge) {
+        if (nonLues > 0) {
+          badge.style.display = 'inline-block';
+          badge.textContent = nonLues;
+        } else {
+          badge.style.display = 'none';
+        }
+      }
+
+      // Stocker les notifications dans une variable globale pour les afficher plus tard
+      window._notifications = notifications;
+    }
+  } catch (error) {
+    console.error('Erreur lors du chargement des notifications:', error);
+  }
+}
+
+// 2. Fonction pour basculer entre Alertes et Notifications
+function toggleVue() {
+  const tableBloc = document.querySelector('.table-bloc');
+  const statsGrille = document.querySelector('.stats-grille');
+  const filtres = document.querySelector('.filtres');
+  const mainTitre = document.querySelector('.main-titre');
+  const sidebarLink = document.querySelector('.sidebar-item');
+  
+  // Vérifier si on est actuellement sur la vue "Notifications"
+  const estSurNotifications = localStorage.getItem('vue_active') === 'notifications';
+
+  if (estSurNotifications) {
+    // === REVENIR AUX ALERTES ===
+    tableBloc.style.display = 'block';
+    statsGrille.style.display = 'grid';
+    filtres.style.display = 'flex';
+    mainTitre.textContent = 'Liste des alertes';
+    
+    // Supprimer le conteneur de notifications s'il existe
+    const notifContainer = document.getElementById('notif-container');
+    if (notifContainer) notifContainer.remove();
+    
+    localStorage.setItem('vue_active', 'alertes');
+  } else {
+    // === AFFICHER LES NOTIFICATIONS ===
+    tableBloc.style.display = 'none';
+    statsGrille.style.display = 'none';
+    filtres.style.display = 'none';
+    mainTitre.textContent = '📬 Notifications';
+
+    // Créer le conteneur s'il n'existe pas
+    let notifContainer = document.getElementById('notif-container');
+    if (!notifContainer) {
+      notifContainer = document.createElement('div');
+      notifContainer.id = 'notif-container';
+      // On l'insère à la place du tableau
+      tableBloc.parentNode.insertBefore(notifContainer, tableBloc);
+    }
+
+    // Générer le HTML des notifications
+    const notifs = window._notifications || [];
+    let html = '<div class="notif-liste">';
+    
+    if (notifs.length === 0) {
+      html += '<div style="text-align:center;padding:2rem;color:#999;">Aucune notification pour le moment</div>';
+    } else {
+      notifs.forEach(notif => {
+        const estLue = notif.lu === 1;
+        html += `
+          <div class="notif-item ${estLue ? 'notif-lue' : 'notif-non-lue'}" onclick="marquerCommeLue(${notif.id_notification})">
+            <div class="notif-date">${formaterDate(notif.created_at)}</div>
+            <div class="notif-message">${notif.message}</div>
+            ${!estLue ? '<span class="notif-puce">●</span>' : ''}
+          </div>
+        `;
+      });
+    }
+    html += '</div>';
+    
+    notifContainer.innerHTML = html;
+    localStorage.setItem('vue_active', 'notifications');
+  }
+}
+
+// 3. Marquer une notification comme lue
+async function marquerCommeLue(id_notification) {
+  const token = localStorage.getItem('token');
+  try {
+    await fetch(`http://localhost:3000/api/notifications/${id_notification}/lu`, {
+      method: 'PATCH',
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    // Recharger les notifications et rafraîchir la vue
+    await chargerNotifications();
+    toggleVue(); // Reste sur la vue notifications mais avec les données à jour
+  } catch (error) {
+    console.error('Erreur:', error);
+  }
+}
+
+
+
+// Charger les données au démarrage
+document.addEventListener('DOMContentLoaded', function() {
+  chargerAlertes();
+  chargerNotifications();
+
+  // 4. Lier le clic du menu latéral (ON LE MET ICI, DANS LE DOMContentLoaded)
+  const sidebarLink = document.querySelector('.sidebar-item');
+  if (sidebarLink) {
+    sidebarLink.addEventListener('click', function(e) {
+      e.preventDefault();
+      toggleVue();
+    });
+  }
+});
+
+// Rafraîchir toutes les 30 secondes
+setInterval(chargerAlertes, 30000);
 
 function deconnecter() {
   localStorage.removeItem('token');
   localStorage.removeItem('utilisateur');
 }
 
-// Charger au démarrage
-document.addEventListener('DOMContentLoaded', chargerAlertes);
-
-// Rafraîchir toutes les 30 secondes
-setInterval(chargerAlertes, 30000);
 </script>
 </body>
 </html>

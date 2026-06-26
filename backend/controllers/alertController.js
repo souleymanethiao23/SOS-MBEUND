@@ -1,31 +1,33 @@
-const db = require('../config/db'); // Import de votre config
+const Alert = require('../models/Alerts');
 
+// Récupérer toutes les alertes
 exports.getAlerts = async (req, res) => {
     try {
-        const [results] = await db.query('SELECT * FROM signalement ORDER BY created_at DESC');
-        res.status(200).json({ success: true, data: results });
+        const alertes = await Alert.findAll();
+        res.status(200).json({ success: true, data: alertes });
     } catch (error) {
         console.error('Erreur:', error);
         res.status(500).json({ success: false, message: error.message });
     }
 };
 
+// Récupérer une alerte par ID
 exports.getAlertById = async (req, res) => {
     try {
         const { id } = req.params;
-        const sql = `SELECT * FROM signalement WHERE id_signalisation = ?`;
-        const [results] = await db.query(sql, [id]);
+        const alerte = await Alert.findById(id);
         
-        if (results.length === 0) {
+        if (!alerte) {
             return res.status(404).json({ success: false, message: "Signalement non trouvé" });
         }
-        res.status(200).json({ success: true, data: results[0] });
+        res.status(200).json({ success: true, data: alerte });
     } catch (error) {
         console.error('Erreur:', error);
         res.status(500).json({ success: false, message: error.message });
     }
 };
 
+// Créer une alerte (utilise la méthode create du modèle)
 exports.createAlert = async (req, res) => {
     try {
         const {
@@ -39,44 +41,34 @@ exports.createAlert = async (req, res) => {
         } = req.body;
         const photo_url = req.file ? req.file.path : null;
 
-        const sql = `INSERT INTO signalement (telephone, niveau_gravite, description, photo_url, zone, statut, created_at, updated_at, id_utilisateur, id_notification)
-                     VALUES (?, ?, ?, ?, ?, ?, NOW(), NOW(), ?, ?)`;
-        const values = [telephone, niveau_gravite, description, photo_url, zone, statut, id_utilisateur, id_notification];
+        // Appeler le modèle qui gère la transaction et la notification
+        const idSignalement = await Alert.create({
+            telephone,
+            niveau_gravite,
+            description,
+            photo_url,
+            zone
+        });
 
-        const [result] = await db.query(sql, values);
-        
         res.status(201).json({
             success: true,
             message: "Alerte créée avec succès",
-            data: {
-                id: result.insertId,
-                telephone,
-                niveau_gravite,
-                description,
-                photo_url,
-                zone,
-                statut,
-                id_utilisateur,
-                id_notification
-            }
+            data: { id: idSignalement }
         });
+
     } catch (error) {
-        console.error('Erreur:', error);
+        console.error('Erreur lors de la création de l\'alerte:', error);
         res.status(500).json({ success: false, message: error.message });
     }
 };
 
+// Mettre à jour le statut
 exports.updateAlertStatus = async (req, res) => {
     try {
         const { id } = req.params;
         const { statut } = req.body;
 
-        const sql = `UPDATE signalement SET statut = ?, updated_at = NOW() WHERE id_signalisation = ?`;
-        const [result] = await db.query(sql, [statut, id]);
-
-        if (result.affectedRows === 0) {
-            return res.status(404).json({ success: false, message: "Alerte non trouvée" });
-        }
+        await Alert.updateStatus(id, statut);
         
         res.status(200).json({
             success: true,
@@ -88,3 +80,43 @@ exports.updateAlertStatus = async (req, res) => {
         res.status(500).json({ success: false, message: error.message });
     }
 };
+
+// Supprimer une alerte (Contrôleur)
+exports.deleteAlert = async (req, res) => {
+    try {
+        const { id } = req.params;
+        
+        // Appeler la méthode delete du modèle Alert
+        await Alert.delete(id);
+        
+        res.status(200).json({
+            success: true,
+            message: "Alerte supprimée avec succès"
+        });
+    } catch (error) {
+        console.error('Erreur lors de la suppression:', error);
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+/*exports.getStats = async (req, res) => {
+    try {
+        
+
+        const total = await Alert.count();
+        const resolues = await Alert.count({
+            where: { statut: 'resolue' }
+        });
+
+        res.status(200).json({
+            success: true,
+            data: { total, resolues }
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+}; */

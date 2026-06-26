@@ -10,7 +10,9 @@ const {
     getAlerts, 
     getAlertById, 
     createAlert, 
-    updateAlertStatus 
+    updateAlertStatus, 
+    deleteAlert
+    //getStats
 } = require('../controllers/alertController');
 
 // Routes publiques (habitants)
@@ -20,5 +22,8 @@ router.post('/', upload.single('photo'), createAlert);
 router.get('/', authMiddleware, getAlerts);
 router.get('/:id', authMiddleware, getAlertById);
 router.put('/:id/status', authMiddleware, updateAlertStatus);
+router.delete('/:id', authMiddleware, deleteAlert);
+//router.get('/stats/public', getStats);
+
 
 module.exports = router;

@@ -22,10 +22,18 @@ const db = require('./config/db');
 // Monter les routes d'alerte (habitants/autorités)
 const alertRoutes = require('./routes/alert');
 const authRoutes = require('./routes/auth');
+const notificationsRoute = require('./routes/notification');
+const alertController = require('./controllers/alertController');
+const notificationController = require('./controllers/notificationController');
 
 // Monter les routeurs
 app.use('/api/alerts', alertRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/notifications', notificationsRoute);
+app.post('/api/alerts', alertController.createAlert);
+app.get('/api/alerts', alertController.getAlerts);
+app.get('/api/notifications', notificationController.getAllNotifications);
+app.patch('/api/notifications/:id/lu', notificationController.markAsRead);
 
 //je démarre le serveur
 
