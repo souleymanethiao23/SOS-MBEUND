@@ -99,24 +99,24 @@ exports.deleteAlert = async (req, res) => {
     }
 };
 
-/*exports.getStats = async (req, res) => {
+exports.getStats = async (req, res) => {
     try {
-        
-
         const total = await Alert.count();
-        const resolues = await Alert.count({
-            where: { statut: 'resolue' }
-        });
+        const resolues = await Alert.countResolues();
 
         res.status(200).json({
             success: true,
-            data: { total, resolues }
+            data: {
+                total,
+                resolues
+            }
         });
 
     } catch (error) {
+        console.error('Erreur stats:', error);
         res.status(500).json({
             success: false,
             message: error.message
         });
     }
-}; */
+};

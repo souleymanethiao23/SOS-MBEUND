@@ -77,6 +77,21 @@ const Alert = {
     );
   },
 
+    // Compter tous les signalements
+  count: async () => {
+    const [rows] = await db.execute('SELECT COUNT(*) as total FROM Signalement');
+    return rows[0].total;
+  },
+
+  // Compter les signalements résolus
+  countResolues: async () => {
+    const [rows] = await db.execute(
+      'SELECT COUNT(*) as total FROM Signalement WHERE statut = ?',
+      ['resolue']
+    );
+    return rows[0].total;
+  },
+
 };
 
 module.exports = Alert;
