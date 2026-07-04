@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SOS-Mbeund — Aide</title>
+  <link rel="stylesheet" href="dashboard.css"/> <!-- Utilisation de votre CSS existant -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    /* Styles spécifiques pour la page d'aide */
+    .aide-container {
+      max-width: 1200px;
+      margin: 3rem auto;
+      padding: 0 1.5rem;
+    }
+
+    .aide-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .aide-header h1 {
+      font-size: 2.5rem;
+      color: #0c2d6e; /* Votre bleu foncé */
+      margin-bottom: 0.5rem;
+    }
+
+    .aide-header p {
+      font-size: 1.1rem;
+      color: #6b7280;
+    }
+
+    .aide-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-bottom: 4rem;
+    }
+
+    .aide-card {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 16px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      border: 1px solid #e5e7eb;
+    }
+
+    .aide-card h3 {
+      color: #0c2d6e;
+      margin-top: 0;
+      border-bottom: 2px solid #f3f4f6;
+      padding-bottom: 1rem;
+      margin-bottom: 1.5rem;
+      font-size: 1.2rem;
+    }
+
+    .aide-item {
+      margin-bottom: 1.5rem;
+    }
+
+    .aide-item strong {
+      display: block;
+      color: #1f2937;
+      margin-bottom: 0.3rem;
+    }
+
+    .aide-item p {
+      margin: 0;
+      color: #4b5563;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .aide-cta {
+      background: #eaf3ff;
+      border-radius: 16px;
+      padding: 2.5rem;
+      text-align: center;
+      border: 1px solid #dbeafe;
+    }
+
+    .aide-cta h2 {
+      color: #0c2d6e;
+      margin-top: 0;
+    }
+
+    .aide-cta p {
+      color: #4b5563;
+      margin-bottom: 1.5rem;
+    }
+
+    .btn-aide {
+      display: inline-block;
+      background: #dc7c5a; /* Votre couleur orange/terre */
+      color: #fff;
+      padding: 0.8rem 2rem;
+      border-radius: 30px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: background 0.3s;
+    }
+
+    .btn-aide:hover {
+      background: #c96647;
+    }
+    
+    /* Pour les icônes de la FAQ */
+    .aide-icon {
+      margin-right: 8px;
+      color: #dc7c5a;
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV (Identique à vos autres pages) -->
+<nav class="top-nav">
+  <div class="top-nav-logo">
+    <img src="image.png" alt="SOS Mbeund" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/>
+    <div class="top-nav-logo-fallback" style="display:none;">🌊 SOS MBEUND</div>
+  </div>
+  <div class="top-nav-links">
+    <a href="index.html">Accueil</a>
+    <a href="signaler.html">Signaler</a>
+    <a href="aide.html" style="font-weight:bold; border-bottom: 2px solid white;">Aide</a>
+    <button class="top-nav-search">Recherche</button>
+  </div>
+</nav>
+
+<!-- CONTENU PRINCIPAL -->
+<main class="aide-container">
+
+  <div class="aide-header">
+    <h1>🤝 Comment pouvons-nous vous aider ?</h1>
+    <p>SOS Mbeund est là pour vous accompagner. Retrouvez ici toutes les réponses à vos questions.</p>
+  </div>
+
+  <!-- GRILLE DES FAQ -->
+  <div class="aide-grid">
+    
+    <!-- COLONNE 1 : Citoyens -->
+    <div class="aide-card">
+      <h3>👤 Pour les citoyens</h3>
+      
+      <div class="aide-item">
+        <strong><span class="aide-icon">🔍</span> Qu'est-ce que SOS Mbeund ?</strong>
+        <p>C'est une plateforme collaborative qui permet aux habitants de signaler en temps réel les zones inondées pour alerter les autorités et la communauté.</p>
+      </div>
+
+      <div class="aide-item">
+        <strong><span class="aide-icon">📲</span> Comment signaler une inondation ?</strong>
+        <p>Cliquez sur <strong>"Signaler"</strong> dans le menu. Remplissez le formulaire (localisation, niveau d'eau, photos) et envoyez.</p>
+      </div>
+
+      <div class="aide-item">
+        <strong><span class="aide-icon">📞</span> Dois-je donner mon numéro ?</strong>
+        <p>Oui, cela permet aux secours de vous rappeler si besoin pour obtenir plus de détails sur la situation.</p>
+      </div>
+    </div>
+
+    <!-- COLONNE 2 : Autorités -->
+    <div class="aide-card">
+      <h3>🏛️ Pour les autorités</h3>
+      
+      <div class="aide-item">
+        <strong><span class="aide-icon">🏛️</span> Comment accéder au tableau de bord ?</strong>
+        <p>Cliquez sur <strong>"Connexion autorité"</strong> en bas de page. Utilisez vos identifiants officiels.</p>
+      </div>
+
+      <div class="aide-item">
+        <strong><span class="aide-icon">🔄</span> Que signifient les statuts ?</strong>
+        <p><strong>Reçue</strong> : Alerte envoyée. <br>
+        <strong>En cours</strong> : Équipe dépêchée. <br>
+        <strong>Résolue</strong> : Intervention terminée. <br>
+        <strong>Rejetée</strong> : Fausse alerte ou doublon.</p>
+      </div>
+
+      <div class="aide-item">
+        <strong><span class="aide-icon">📊</span> Comment clore une alerte ?</strong>
+        <p>Dans le tableau de bord, cliquez sur <strong>"Voir"</strong> à côté de l'alerte. Vous pourrez alors la marquer comme résolue.</p>
+      </div>
+    </div>
+
+    <!-- COLONNE 3 : Technique -->
+    <div class="aide-card">
+      <h3>🛠️ Assistance technique</h3>
+      
+      <div class="aide-item">
+        <strong><span class="aide-icon">🛠️</span> Je rencontre un bug.</strong>
+        <p>Si une page ne s'affiche pas correctement, essayez d'abord de rafraîchir la page (touche <strong>F5</strong>).</p>
+      </div>
+
+      <div class="aide-item">
+        <strong><span class="aide-icon">📧</span> Besoin d'aide immédiate ?</strong>
+        <p>Contactez-nous par email : <strong>support@sos-mbeund.sn</strong>.</p>
+      </div>
+
+      <div class="aide-item">
+        <strong><span class="aide-icon">🚨</span> Urgence vitale ?</strong>
+        <p>Composez immédiatement le <strong>18</strong> (Pompiers) pour une assistance d'urgence.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SECTION APPEL À L'ACTION -->
+  <div class="aide-cta">
+    <h2>Vous avez une autre question ?</h2>
+    <p>Notre équipe est disponible pour vous répondre. N'hésitez pas à nous envoyer un message.</p>
+    <a href="mailto:support@sos-mbeund.sn" class="btn-aide">✉️ Contacter le support</a>
+  </div>
+
+</main>
+
+<!-- FOOTER (Identique à votre dashboard) -->
+<footer class="main-footer">
+  <div class="footer-left">
+    <div class="footer-links">
+      <a href="signaler.html">Signaler un risque</a>
+      <a href="#">Carte des zones</a>
+      <a href="#">Partenaires</a>
+      <a href="#">Contact</a>
+      <a href="login.html">Connexion autorité</a>
+    </div>
+    <p class="copyright">© SOS Mbeund — Tous droits réservés</p>
+  </div>
+  <div class="footer-right">
+    <div class="social-icons">
+      <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+      <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+      <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+    </div>
+    <div class="emergency-number">18 — Pompiers</div>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -50,9 +50,60 @@
     .p-haute{background:#FEE2E2;color:#991B1B;}
     .p-moyenne{background:#FEF3C7;color:#92400E;}
     .p-faible{background:#DCFCE7;color:#14532D;}
-    .s-urgente{background:#FEE2E2;color:#991B1B;}
-    .s-encours{background:#DBEAFE;color:#1E3A8A;}
-    .s-resolu{background:#DCFCE7;color:#14532D;}
+
+   
+
+/* Styles pour les badges de statut */
+.badge-attente {
+  background-color: #fff3cd;
+  color: #856404;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  display: inline-block;
+}
+
+.badge-encours {
+  background-color: #cce5ff;
+  color: #004085;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  display: inline-block;
+}
+
+.badge-resolu {
+  background-color: #d4edda;
+  color: #155724;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  display: inline-block;
+}
+
+.badge-rejetee {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  display: inline-block;
+}
+
+.badge-urgente {
+  background-color: #f8d7da;
+  color: #dc3545;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  display: inline-block;
+}
+/*---------------------------*/
     .btn-voir{color:#0A3080;font-size:0.85rem;font-weight:600;text-decoration:none;background:none;border:none;cursor:pointer;font-family:'Outfit',sans-serif;}
     .btn-voir:hover{text-decoration:underline;}
     /* ADMIN */
@@ -145,3 +196,73 @@
     .user-menu-item:hover{background:#F0F4FA;}
     .user-menu-deco{display:flex;align-items:center;gap:10px;padding:10px 16px;color:#C0392B;text-decoration:none;font-size:0.88rem;font-weight:600;border-top:1px solid #E5E7EB;}
     .user-menu-deco:hover{background:#FEE2E2;}
+
+    /* Badge de notification */
+.notif-badge {
+  display: inline-block;
+  background-color: #dc3545; /* Rouge */
+  color: white;
+  border-radius: 50%;
+  padding: 2px 8px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  margin-left: 8px;
+  vertical-align: middle;
+  min-width: 20px;
+  text-align: center;
+  line-height: 1.4;
+}
+
+/* Conteneur des notifications */
+.notif-liste {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  overflow: hidden;
+  margin-top: 1rem;
+}
+
+.notif-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #f3f4f6;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.notif-item:hover {
+  background: #f9fafb;
+}
+
+.notif-item:last-child {
+  border-bottom: none;
+}
+
+.notif-non-lue {
+  background: #f0f7ff;
+  border-left: 4px solid #2563eb;
+}
+
+.notif-lue {
+  opacity: 0.7;
+}
+
+.notif-date {
+  font-size: 0.8rem;
+  color: #6b7280;
+  min-width: 120px;
+}
+
+.notif-message {
+  flex: 1;
+  color: #1f2937;
+  margin: 0 1rem;
+  white-space: pre-line;
+}
+
+.notif-puce {
+  color: #2563eb;
+  font-size: 1.2rem;
+}

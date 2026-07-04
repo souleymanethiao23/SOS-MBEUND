@@ -18,7 +18,7 @@
   <div class="top-nav-links">
     <a href="index.html">Accueil</a>
     <a href="signaler.html">Signaler</a>
-    <a href="#">Aide</a>
+    <a href="aide.html">Aide</a>
     <button class="top-nav-search">Recherche</button>
   </div>
 </nav>
@@ -319,6 +319,7 @@ function fermerModal(type) {
   document.getElementById('modal-' + type).classList.remove('active');
 }
 
+
 // Confirmer marquer résolu
 async function confirmerResolu() {
   fermerModal('resolu');
@@ -326,20 +327,22 @@ async function confirmerResolu() {
   const token = localStorage.getItem('token');
   
   try {
-    const response = await fetch(`http://localhost:3000/api/alerts/${id}`, {
-      method: 'PATCH',
+    // AJOUTEZ "/status" à la fin de l'URL !
+    const response = await fetch(`http://localhost:3000/api/alerts/${id}/status`, {
+      method: 'PUT', // <-- Changez PATCH en PUT pour correspondre à votre route
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ statut: 'resolu' })
+      body: JSON.stringify({ statut: 'resolue' }) // <-- Assurez-vous que c'est 'resolue' (avec un e) comme attendu par votre BDD
     });
     
     if (response.ok) {
       alert('✅ Alerte marquée comme résolue !');
       window.location.href = 'dashboard.html';
     } else {
-      alert('❌ Erreur lors du changement de statut');
+      const data = await response.json();
+      alert('❌ Erreur : ' + (data.message || 'Erreur lors du changement de statut'));
     }
   } catch (error) {
     console.error('Erreur:', error);

@@ -16,7 +16,7 @@
   <div class="top-nav-links">
     <a href="index.html">Accueil</a>
     <a href="signaler.html">Signaler</a>
-    <a href="#">Aide</a>
+    <a href="aide.html">Aide</a>
     <button class="top-nav-search">Recherche</button>
   </div>
 </nav>
@@ -101,7 +101,7 @@
         <div class="footer-left">
             <div class="footer-links">
                 <a href="signaler.html">Signaler un risque</a>
-                <a href="#">Carte des zones</a>
+                <a href="aide.html">Aide</a>
                 <a href="#">Partenaires</a>
                 <a href="#">Contact</a>
                 <a href="login.html">Connexion autorité</a>
@@ -152,10 +152,12 @@ async function soumettre(e) {
       // Afficher succès
       const succes = document.getElementById('succes');
       succes.style.display = 'block';
+       succes.innerHTML = '✅ Alerte publiée avec succès ! Merci pour votre signalement. 🙏';
+      
       form.querySelectorAll('input,select,textarea,button').forEach(el => el.disabled = true);
       
       // Rediriger après 2.5s
-      setTimeout(() => { window.location.href = 'dashboard.html'; }, 2500);
+      setTimeout(() => { window.location.href = 'index.html'; }, 2500);
     } else {
       alert('Erreur : ' + (data.message || 'Une erreur est survenue'));
       btnPublier.disabled = false;
