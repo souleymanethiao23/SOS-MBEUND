@@ -76,27 +76,31 @@
       </div>
     </div>
 
+  
     <!-- FILTRES -->
-    <div class="filtres">
-      <input type="text" class="filtre-input" placeholder="Rechercher une zone..."/>
-      <select class="filtre-input" title="Filtrer par priorité">
-        <option>Toutes priorités</option>
-        <option>Haute</option>
-        <option>Moyenne</option>
-        <option>Faible</option>
-      </select>
-      <select class="filtre-input" title="Filtrer par statut">
-        <option>Tous statuts</option>
-        <option>Urgente</option>
-        <option>En cours</option>
-        <option>Résolu</option>
-      </select>
-      <select class="filtre-input" title="Trier par date">
-        <option>Plus récentes</option>
-        <option>Plus anciennes</option>
-      </select>
-    </div>
-
+<div class="filtres">
+  <input type="text" id="filtre-zone" class="filtre-input" placeholder="Rechercher une zone..."/>
+  
+  <select id="filtre-priorite" class="filtre-input" title="Filtrer par priorité">
+   <option value="all">Toutes priorités</option>
+  <option value="eleve">Haute</option>   
+  <option value="moyen">Moyenne</option> 
+  <option value="faible">Faible</option>
+  </select>
+  
+  <select id="filtre-statut" class="filtre-input" title="Filtrer par statut">
+    <option value="all">Tous statuts</option>
+    <option value="recue">Reçue</option>
+    <option value="en cours">En cours</option>
+    <option value="resolue">Résolu</option>
+    <option value="en attente">En attente</option>
+  </select>
+  
+  <select id="filtre-date" class="filtre-input" title="Trier par date">
+    <option value="desc">Plus récentes</option>
+    <option value="asc">Plus anciennes</option>
+  </select>
+</div>
     <!-- TABLEAU -->
     <div class="table-bloc">
       <table>
@@ -168,7 +172,7 @@ function formaterDate(dateStr) {
 // Mapper priorité
 function mapperPriorite(niveau) {
   const map = {
-    'critique': { label: '● Urgente', class: 'p-urgente' },
+    'critique': { label:'● Urgente', class: 'p-urgente' },
     'eleve': { label: '● Haute', class: 'p-haute' },
     'moyen': { label: '● Moyenne', class: 'p-moyenne' },
     'faible': { label: '● Faible', class: 'p-faible' }
@@ -176,24 +180,21 @@ function mapperPriorite(niveau) {
   return map[niveau] || { label: '● Moyenne', class: 'p-moyenne' };
 }
 
-// Mapper statut
+
+
 // Mapper statut
 function mapperStatut(statut) {
   const map = {
     'recue': { label: 'Reçue', class: 'badge-attente' },
+    'en cours': { label: 'En cours', class: 'badge-encours' },
     'en_cours': { label: 'En cours', class: 'badge-encours' },
-    'resolue': { label: 'Résolue', class: 'badge-resolu' },
-    'rejetee': { label: 'Rejetée', class: 'badge-rejetee' },
-    'critique': { label: 'Urgente', class: 'badge-urgente' }
+    'resolue': { label: 'Résolu', class: 'badge-resolu' },
+    'resolu': { label: 'Résolu', class: 'badge-resolu' },
+    'en attente': { label: 'En attente', class: 'badge-encours' },
+    'rejetee': { label: 'Rejetée', class: 'badge-rejetee' }
   };
-  
-  // Si le statut n'est pas dans la map, on affiche le statut brut
-  if (map[statut]) {
-    return map[statut];
-  }
-  
-  // Fallback
-  return { label: statut || 'Reçue', class: 'badge-encours' };
+
+  return map[statut] || { label: statut || 'Reçue', class: 'badge-encours' };
 }
 
 // Masquer téléphone
@@ -211,9 +212,7 @@ async function chargerAlertes() {
   try {
     const response = await fetch('http://localhost:3000/api/alerts', {
       method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
+      headers: { 'Authorization': `Bearer ${token}` }
     });
 
     if (!response.ok) {
@@ -228,59 +227,95 @@ async function chargerAlertes() {
     const data = await response.json();
     const alertes = data.data || [];
 
-    // Calculer stats
+    // Calculer stats (sur l'ensemble des alertes, pas sur le résultat filtré !)
     let total = alertes.length;
-    /*let urgentes = alertes.filter(a => a.niveau_gravite === 'critique').length;
-    let encours = alertes.filter(a => a.statut === 'en_cours').length;
-    let resolues = alertes.filter(a => a.statut === 'resolu').length;*/
-    let urgentes = alertes.filter(a => a.niveau_gravite === 'critique').length;
-    let encours = alertes.filter(
-  a => a.statut === 'en_cours'
-).length;
+    let urgentes = alertes.filter(a => a.niveau_gravite === 'eleve' || a.niveau_gravite === 'critique').length;
+    let encours = alertes.filter(a => a.statut === 'recue' || a.statut === 'en cours' || a.statut === 'en_cours').length;
+    let resolues = alertes.filter(a => a.statut === 'resolue' || a.statut === 'resolu').length;
 
-let resolues = alertes.filter(
-  a => a.statut === 'resolue'
-).length;
-    
-
-    // Mettre à jour stats
     document.getElementById('stat-total').textContent = total;
     document.getElementById('stat-urgentes').textContent = urgentes;
     document.getElementById('stat-encours').textContent = encours;
     document.getElementById('stat-resolues').textContent = resolues;
 
-    // Remplir tableau
-    const tbody = document.getElementById('table-alertes');
-    tbody.innerHTML = '';
+    // Stocker les alertes dans une variable globale pour que les filtres puissent y accéder
+    window._toutesAlertes = alertes;
 
-    if (alertes.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:2rem;color:#999;">Aucune alerte pour le moment</td></tr>';
-      return;
-    }
+    // Afficher le tableau avec les filtres actuels
+    afficherAlertesFiltrees(alertes);
 
-   alertes.forEach((alerte, idx) => {
-  const priorite = mapperPriorite(alerte.niveau_gravite);
-  const statut = mapperStatut(alerte.statut);
-  const tel = masquerTelephone(alerte.telephone);
-  const date = formaterDate(alerte.created_at);
-
-  const row = `
-    <tr>
-      <td><div class="zone-cell"><span class="zone-icon">📍</span>${alerte.zone || 'Non spécifiée'}</div></td>
-      <td>${date}</td>
-      <td><span class="badge-priorite ${priorite.class}">${priorite.label}</span></td>
-      <td><span class="badge-statut ${statut.class}">${statut.label}</span></td>
-      <td>${tel}</td>
-      <td><a href="alerte-detail.html?id=${alerte.id_signalisation}" class="btn-voir">Voir</a></td>
-    </tr>
-  `;
-  tbody.innerHTML += row;
-});
   } catch (error) {
     console.error('Erreur:', error);
     document.getElementById('table-alertes').innerHTML = '<tr><td colspan="6" style="text-align:center;padding:2rem;color:#d32f2f;">⚠️ Erreur de connexion au serveur</td></tr>';
   }
 }
+
+    
+   // Fonction pour filtrer et afficher les alertes
+function afficherAlertesFiltrees(alertes) {
+  // 1. Récupérer les valeurs des filtres
+  const zoneSaisie = document.getElementById('filtre-zone').value.trim().toLowerCase();
+  const prioriteChoisie = document.getElementById('filtre-priorite').value;
+  const statutChoisi = document.getElementById('filtre-statut').value;
+  const triDate = document.getElementById('filtre-date').value;
+
+  // 2. Appliquer les filtres sur le tableau 'alertes'
+  let resultats = alertes.filter(alerte => {
+    // Filtre Zone (recherche partielle, insensible à la casse)
+    const matchZone = zoneSaisie === '' || (alerte.zone && alerte.zone.toLowerCase().includes(zoneSaisie));
+    
+    // Filtre Priorité
+    const matchPriorite = prioriteChoisie === 'all' || alerte.niveau_gravite === prioriteChoisie;
+    
+    // Filtre Statut
+    const matchStatut = statutChoisi === 'all' ||
+      (statutChoisi === 'recue' && (alerte.statut === 'recue' || alerte.statut === 'en cours' || alerte.statut === 'en_cours')) ||
+      (statutChoisi === 'en cours' && (alerte.statut === 'en cours' || alerte.statut === 'en_cours' || alerte.statut === 'recue')) ||
+      (statutChoisi === 'resolue' && (alerte.statut === 'resolue' || alerte.statut === 'resolu')) ||
+      (statutChoisi === 'en attente' && (alerte.statut === 'en attente' || alerte.statut === 'en_attente')) ||
+      alerte.statut === statutChoisi;
+
+    return matchZone && matchPriorite && matchStatut;
+  });
+
+  // 3. Trier par date
+  if (triDate === 'asc') {
+    // Plus anciennes en premier
+    resultats.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+  } else {
+    // Plus récentes en premier (par défaut)
+    resultats.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+  }
+
+  // 4. Générer le HTML du tableau avec les résultats filtrés
+  const tbody = document.getElementById('table-alertes');
+  tbody.innerHTML = '';
+
+  if (resultats.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:2rem;color:#999;">Aucune alerte ne correspond à ces critères</td></tr>';
+    return;
+  }
+
+  resultats.forEach((alerte) => {
+    const priorite = mapperPriorite(alerte.niveau_gravite);
+    const statut = mapperStatut(alerte.statut);
+    const tel = masquerTelephone(alerte.telephone);
+    const date = formaterDate(alerte.created_at);
+
+    const row = `
+      <tr>
+        <td><div class="zone-cell"><span class="zone-icon">📍</span>${alerte.zone || 'Non spécifiée'}</div></td>
+        <td>${date}</td>
+        <td><span class="badge-priorite ${priorite.class}">${priorite.label}</span></td>
+        <td><span class="badge-statut ${statut.class}">${statut.label}</span></td>
+        <td>${tel}</td>
+        <td><a href="alerte-detail.html?id=${alerte.id_signalisation}" class="btn-voir">Voir</a></td>
+      </tr>
+    `;
+    tbody.innerHTML += row;
+    });
+    }
+    
 
 function toggleMenu() {
   const menu = document.getElementById('user-menu');
@@ -419,7 +454,7 @@ document.addEventListener('DOMContentLoaded', function() {
   chargerAlertes();
   chargerNotifications();
 
-  // 4. Lier le clic du menu latéral (ON LE MET ICI, DANS LE DOMContentLoaded)
+  // Lier le clic du menu latéral
   const sidebarLink = document.querySelector('.sidebar-item');
   if (sidebarLink) {
     sidebarLink.addEventListener('click', function(e) {
@@ -427,6 +462,33 @@ document.addEventListener('DOMContentLoaded', function() {
       toggleVue();
     });
   }
+
+  // --- ÉCOUTEURS DES FILTRES---
+  
+  document.getElementById('filtre-zone').addEventListener('input', function() {
+    // On vérifie que les données existent avant de filtrer
+    if (window._toutesAlertes && Array.isArray(window._toutesAlertes)) {
+      afficherAlertesFiltrees(window._toutesAlertes);
+    }
+  });
+
+  document.getElementById('filtre-priorite').addEventListener('change', function() {
+    if (window._toutesAlertes && Array.isArray(window._toutesAlertes)) {
+      afficherAlertesFiltrees(window._toutesAlertes);
+    }
+  });
+
+  document.getElementById('filtre-statut').addEventListener('change', function() {
+    if (window._toutesAlertes && Array.isArray(window._toutesAlertes)) {
+      afficherAlertesFiltrees(window._toutesAlertes);
+    }
+  });
+
+  document.getElementById('filtre-date').addEventListener('change', function() {
+    if (window._toutesAlertes && Array.isArray(window._toutesAlertes)) {
+      afficherAlertesFiltrees(window._toutesAlertes);
+    }
+  });
 });
 
 // Rafraîchir toutes les 30 secondes

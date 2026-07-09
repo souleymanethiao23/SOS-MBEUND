@@ -28,8 +28,8 @@
     .niveau-section{margin-bottom:1.5rem;}
     .niveau-titre{font-size:0.78rem;color:#9CA3AF;margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;}
     .barre-wrapper{position:relative;background:#E5E7EB;border-radius:10px;height:10px;overflow:hidden;margin-bottom:6px;}
-    .barre-fill{height:100%;border-radius:10px;background:linear-gradient(90deg,#F59E0B,#C0392B);}
-    .barre-label{font-size:0.78rem;color:#C0392B;font-weight:600;text-align:right;}
+    .barre-fill{height:100%;border-radius:10px;transition:all 0.3s ease;background:linear-gradient(90deg,#F59E0B,#C0392B);}
+    .barre-label{font-size:0.78rem;color:#C0392B;font-weight:600;text-align:right;transition:color 0.3s ease;}
     .photos-section{margin-bottom:1.5rem;}
     .section-titre{font-size:0.82rem;color:#9CA3AF;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;}
     .photos-grille{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}

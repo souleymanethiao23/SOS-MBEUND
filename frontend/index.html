@@ -128,31 +128,26 @@
             <div class="emergency-number">18 — Pompiers</div>
         </div>
     </footer>
-<!--
-    <script>
-
+<script>
 async function chargerStats() {
   try {
     const reponse = await fetch('http://localhost:3000/api/alerts/stats/public');
     const data = await reponse.json();
 
-    console.log("API RESPONSE:", data);
+    console.log("✅ API STATS:", data);
 
-    const stats = data.data;
-
-    document.getElementById('stat-signalements').textContent = stats.total;
-    document.getElementById('stat-resolus').textContent = stats.resolues;
-
+    if (data.success && data.data) {
+      document.getElementById('stat-signalements').textContent = data.data.total;
+      document.getElementById('stat-resolus').textContent = data.data.resolues;
+    }
   } catch (error) {
-    console.error('Erreur stats:', error);
+    console.error('❌ Erreur stats:', error);
+    // On laisse les 0 affichés par défaut en cas d'erreur
   }
 }
- 
+
 document.addEventListener('DOMContentLoaded', chargerStats);
-
 </script>
-
--->
            
 </body>
 </html>  

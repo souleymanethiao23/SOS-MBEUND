@@ -46,9 +46,9 @@
       <div class="niveau-section">
         <div class="niveau-titre">Niveau d'eau</div>
         <div class="barre-wrapper">
-          <div class="barre-fill" style="width:80%"></div>
+          <div class="barre-fill" id="barre-fill"></div>
         </div>
-        <div class="barre-label">Haute (80%)</div>
+        <div class="barre-label" id="barre-label">0%</div>
       </div>
 
       <!-- INFOS -->
@@ -243,9 +243,33 @@ async function chargerDetailAlerte() {
     const data = await response.json();
     const alerte = data.data;
 
+    function definirBarrePriorite(niveauGravite) {
+      const config = {
+        critique: { pourcentage: 100, couleur: '#C0392B', texte: 'Urgente' },
+        eleve: { pourcentage: 80, couleur: '#D97706', texte: 'Haute' },
+        moyen: { pourcentage: 50, couleur: '#F59E0B', texte: 'Moyenne' },
+        faible: { pourcentage: 25, couleur: '#16A34A', texte: 'Faible' }
+      };
+
+      const valeur = config[niveauGravite] || config.moyen;
+      const barre = document.getElementById('barre-fill');
+      const label = document.getElementById('barre-label');
+
+      if (barre) {
+        barre.style.width = `${valeur.pourcentage}%`;
+        barre.style.background = `linear-gradient(90deg, ${valeur.couleur}, #111827)`;
+      }
+
+      if (label) {
+        label.textContent = `${valeur.texte} (${valeur.pourcentage}%)`;
+        label.style.color = valeur.couleur;
+      }
+    }
+
     // Mettre à jour l'interface avec les données
     document.querySelector('.alerte-id').textContent = `Alerte #A-${alerte.id_signalisation}`;
     document.querySelector('.alerte-lieu').textContent = alerte.zone || 'Non spécifiée';
+    definirBarrePriorite(alerte.niveau_gravite);
     
     // Mettre à jour les badges de priorité
     const badgesRow = document.querySelector('.badges-row');
